@@ -46,60 +46,76 @@
             </div>
         </div>
         
-        <!-- Правая часть - Форма авторизации -->
+        <!-- Правая часть - Форма авторизации или картинка AI-SANA -->
         <div class="md:w-1/2">
-            <div class="glass-card p-8 text-white max-w-md mx-auto">
-                <h2 class="text-2xl font-bold mb-6 text-center">Авторизация</h2>
-                <form>
-                    <div class="mb-4">
-                        <label class="block text-gray-300 mb-2" for="text">Логин</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-envelope text-gray-400"></i>
-                            </div>
-                            <input type="text" id="text" class="w-full py-3 pl-10 pr-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ваш логин от системы Platonus">
-                        </div>
+            {% if user.is_authenticated %}
+                <!-- Показываем картинку AI-SANA для авторизованных пользователей -->
+                <div class="glass-card p-6 text-white max-w-md mx-auto">
+                    <h2 class="text-2xl font-bold mb-4 text-center">Программа AI-SANA</h2>
+                    <div class="rounded-lg overflow-hidden mb-4">
+                        <img src="{% static 'img/ai-sana.png' %}" alt="AI-SANA Program" class="w-full">
                     </div>
-                    <div class="mb-6">
-                        <label class="block text-gray-300 mb-2" for="password">Пароль</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="fas fa-lock text-gray-400"></i>
-                            </div>
-                            <input type="password" id="password" class="w-full py-3 pl-10 pr-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                <i class="fas fa-eye text-gray-400 cursor-pointer hover:text-gray-300"></i>
+                    <p class="text-gray-300 text-sm mb-4">Министерство науки и высшего образования представило инновационную программу AI-SANA по искусственному интеллекту</p>
+                    <a href="{% url 'dashboard' %}" class="w-full btn-gradient py-3 rounded-lg text-white font-semibold shadow-lg block text-center">
+                        Перейти к проверке работ
+                    </a>
+                </div>
+            {% else %}
+                <!-- Показываем форму авторизации для неавторизованных пользователей -->
+                <div class="glass-card p-8 text-white max-w-md mx-auto">
+                    <h2 class="text-2xl font-bold mb-6 text-center">Авторизация</h2>
+                    <form method="post" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label class="block text-gray-300 mb-2" for="username">Логин</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-user text-gray-400"></i>
+                                </div>
+                                <input type="text" id="username" name="username" class="w-full py-3 pl-10 pr-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ваш логин">
                             </div>
                         </div>
-                    </div>
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="flex items-center">
-                            <input type="checkbox" id="remember" class="rounded bg-gray-800 border-gray-500 text-blue-500 focus:ring-blue-500">
-                            <label for="remember" class="ml-2 text-sm text-gray-300">Запомнить меня</label>
+                        <div class="mb-6">
+                            <label class="block text-gray-300 mb-2" for="password">Пароль</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <i class="fas fa-lock text-gray-400"></i>
+                                </div>
+                                <input type="password" id="password" name="password" class="w-full py-3 pl-10 pr-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                    <i class="fas fa-eye text-gray-400 cursor-pointer hover:text-gray-300 toggle-password"></i>
+                                </div>
+                            </div>
                         </div>
-                        <a href="#" class="text-sm text-blue-400 hover:underline">Забыли пароль?</a>
+                        <div class="flex items-center justify-between mb-6">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="remember" name="remember" class="rounded bg-gray-800 border-gray-500 text-blue-500 focus:ring-blue-500">
+                                <label for="remember" class="ml-2 text-sm text-gray-300">Запомнить меня</label>
+                            </div>
+                            <a href="#" class="text-sm text-blue-400 hover:underline">Забыли пароль?</a>
+                        </div>
+                        <button type="submit" class="w-full btn-gradient py-3 rounded-lg text-white font-semibold shadow-lg">
+                            Войти
+                        </button>
+                    </form>
+                    
+                    <div class="mt-6 text-center text-gray-300 text-sm">
+                        <p>Нет аккаунта? <a href="{% url 'register' %}" class="text-blue-400 hover:underline">Зарегистрироваться</a></p>
                     </div>
-                    <button type="submit" class="w-full btn-gradient py-3 rounded-lg text-white font-semibold shadow-lg">
-                        Войти
-                    </button>
-                </form>
+                </div>
                 
-                <div class="mt-6 text-center text-gray-300 text-sm">
-                    <p>Нет аккаунта? <a href="#" class="text-blue-400 hover:underline">Зарегистрироваться</a></p>
-                </div>
-            </div>
-            
-            <div class="mt-8 glass-card p-6 max-w-md mx-auto">
-                <div class="flex items-center text-white">
-                    <div class="rounded-full bg-blue-500 p-3 mr-4">
-                        <i class="fas fa-info"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold mb-1">Нужна помощь?</h3>
-                        <p class="text-sm text-gray-300">Свяжитесь с администратором или обратитесь в техническую поддержку</p>
+                <div class="mt-8 glass-card p-6 max-w-md mx-auto">
+                    <div class="flex items-center text-white">
+                        <div class="rounded-full bg-blue-500 p-3 mr-4">
+                            <i class="fas fa-info"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-1">Нужна помощь?</h3>
+                            <p class="text-sm text-gray-300">Свяжитесь с администратором или обратитесь в техническую поддержку</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
     </div>
 </main>

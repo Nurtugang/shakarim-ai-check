@@ -1,0 +1,265 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<main class="container mx-auto px-4 py-8">
+    <div class="mb-6">
+        <a href="{% url 'dashboard' %}" class="text-blue-400 hover:text-blue-300 flex items-center">
+            <i class="fas fa-arrow-left mr-2"></i> Вернуться к истории проверок
+        </a>
+    </div>
+
+    <h1 class="text-2xl md:text-3xl font-bold text-white mb-6">{{ check.file_name }}</h1>
+
+    <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Исходный документ -->
+        <div class="lg:w-1/2">
+            <div class="glass-card p-4 mb-4">
+                <h2 class="text-xl font-semibold text-white mb-2">Исходный документ</h2>
+            </div>
+            
+            <div class="glass-card p-6 h-screen overflow-auto">
+                <div class="bg-gray-900 rounded-lg p-6 text-white whitespace-pre-wrap font-mono text-sm">
+                    {{ check.extracted_text|linebreaks }}
+                </div>
+            </div>
+        </div>
+        
+        <!-- Анализ документа -->
+        <div class="lg:w-1/2">
+            <div class="glass-card p-4 mb-4">
+                <h2 class="text-xl font-semibold text-white mb-2">Результаты анализа</h2>
+                
+                <div class="flex space-x-2">
+                    <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
+                        Структура: {{ check.structure_score|floatformat:1 }}%
+                    </span>
+                    <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+                        Логика: {{ check.logic_score|floatformat:1 }}%
+                    </span>
+                    <span class="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-sm">
+                        Грамматика: {{ check.grammar_score|floatformat:1 }}%
+                    </span>
+                    <span class="px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full text-sm">
+                        Оригинальность: {{ check.originality_score|floatformat:1 }}%
+                    </span>
+                </div>
+            </div>
+            
+            <div class="glass-card p-6 h-screen overflow-auto">
+                <div x-data="{ activeTab: 'analysis' }">
+                    <div class="border-b border-gray-700 mb-4">
+                        <ul class="flex flex-wrap -mb-px">
+                            <li class="mr-2">
+                                <button @click="activeTab = 'analysis'" :class="{'text-blue-400 border-b-2 border-blue-400': activeTab === 'analysis', 'text-gray-400 hover:text-gray-300': activeTab !== 'analysis'}" class="inline-block py-2 px-4 font-medium">
+                                    Анализ
+                                </button>
+                            </li>
+                            <li class="mr-2">
+                                <button @click="activeTab = 'strengths'" :class="{'text-blue-400 border-b-2 border-blue-400': activeTab === 'strengths', 'text-gray-400 hover:text-gray-300': activeTab !== 'strengths'}" class="inline-block py-2 px-4 font-medium">
+                                    Сильные стороны
+                                </button>
+                            </li>
+                            <li class="mr-2">
+                                <button @click="activeTab = 'weaknesses'" :class="{'text-blue-400 border-b-2 border-blue-400': activeTab === 'weaknesses', 'text-gray-400 hover:text-gray-300': activeTab !== 'weaknesses'}" class="inline-block py-2 px-4 font-medium">
+                                    Слабые стороны
+                                </button>
+                            </li>
+                            <li class="mr-2">
+                                <button @click="activeTab = 'recommendations'" :class="{'text-blue-400 border-b-2 border-blue-400': activeTab === 'recommendations', 'text-gray-400 hover:text-gray-300': activeTab !== 'recommendations'}" class="inline-block py-2 px-4 font-medium">
+                                    Рекомендации
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Анализ -->
+                    <div x-show="activeTab === 'analysis'" class="text-white space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-green-400">Структура</h3>
+                            <div class="text-gray-300">
+                                {{ structure_analysis|linebreaks }}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-purple-400">Логика изложения</h3>
+                            <div class="text-gray-300">
+                                {{ logic_analysis|linebreaks }}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-yellow-400">Грамматика и стиль</h3>
+                            <div class="text-gray-300">
+                                {{ grammar_analysis|linebreaks }}
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-orange-400">Оригинальность</h3>
+                            <div class="text-gray-300">
+                                {{ originality_analysis|linebreaks }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Сильные стороны -->
+                    <div x-show="activeTab === 'strengths'" class="text-white space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-green-400">Структура</h3>
+                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                                {% for item in structure_strengths %}
+                                    <li>{{ item }}</li>
+                                {% empty %}
+                                    <li class="text-gray-500">Информация не найдена</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-purple-400">Логика изложения</h3>
+                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                                {% for item in logic_strengths %}
+                                    <li>{{ item }}</li>
+                                {% empty %}
+                                    <li class="text-gray-500">Информация не найдена</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-yellow-400">Грамматика и стиль</h3>
+                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                                {% for item in grammar_strengths %}
+                                    <li>{{ item }}</li>
+                                {% empty %}
+                                    <li class="text-gray-500">Информация не найдена</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-orange-400">Оригинальность</h3>
+                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                                {% for item in originality_strengths %}
+                                    <li>{{ item }}</li>
+                                {% empty %}
+                                    <li class="text-gray-500">Информация не найдена</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Слабые стороны -->
+                    <div x-show="activeTab === 'weaknesses'" class="text-white space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-green-400">Структура</h3>
+                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                                {% for item in structure_weaknesses %}
+                                    <li>{{ item }}</li>
+                                {% empty %}
+                                    <li class="text-gray-500">Информация не найдена</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-purple-400">Логика изложения</h3>
+                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                                {% for item in logic_weaknesses %}
+                                    <li>{{ item }}</li>
+                                {% empty %}
+                                    <li class="text-gray-500">Информация не найдена</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-yellow-400">Грамматика и стиль</h3>
+                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                                {% for item in grammar_weaknesses %}
+                                    <li>{{ item }}</li>
+                                {% empty %}
+                                    <li class="text-gray-500">Информация не найдена</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-orange-400">Оригинальность</h3>
+                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                                {% for item in originality_weaknesses %}
+                                    <li>{{ item }}</li>
+                                {% empty %}
+                                    <li class="text-gray-500">Информация не найдена</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Рекомендации -->
+                    <div x-show="activeTab === 'recommendations'" class="text-white space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-blue-400">Общие рекомендации</h3>
+                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                                {% for item in general_recommendations %}
+                                    <li>{{ item }}</li>
+                                {% empty %}
+                                    <li class="text-gray-500">Информация не найдена</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-green-400">Рекомендации по структуре</h3>
+                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                                {% for item in structure_recommendations %}
+                                    <li>{{ item }}</li>
+                                {% empty %}
+                                    <li class="text-gray-500">Информация не найдена</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-purple-400">Рекомендации по логике</h3>
+                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                                {% for item in logic_recommendations %}
+                                    <li>{{ item }}</li>
+                                {% empty %}
+                                    <li class="text-gray-500">Информация не найдена</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-yellow-400">Рекомендации по грамматике</h3>
+                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                                {% for item in grammar_recommendations %}
+                                    <li>{{ item }}</li>
+                                {% empty %}
+                                    <li class="text-gray-500">Информация не найдена</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2 text-orange-400">Рекомендации по оригинальности</h3>
+                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
+                                {% for item in originality_recommendations %}
+                                    <li>{{ item }}</li>
+                                {% empty %}
+                                    <li class="text-gray-500">Информация не найдена</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+{% endblock main %}

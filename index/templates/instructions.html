@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<main class="container mx-auto px-4 py-12">
+    <div class="glass-card p-8 text-white">
+        <h1 class="text-3xl font-bold mb-8 text-center">Инструкция по использованию<br>Shakarim AI Check</h1>
+        
+        <!-- Введение -->
+        <div class="mb-10">
+            <p class="text-xl mb-4 text-center">Добро пожаловать в систему интеллектуальной проверки студенческих работ</p>
+            <p class="text-gray-300 mb-2">Shakarim AI Check использует технологии искусственного интеллекта Google Gemini для анализа академических работ и предоставляет детальный отчет по структуре, логике, грамматике и оригинальности текста.</p>
+        </div>
+        
+        <!-- Шаги использования -->
+        <div class="mb-10">
+            <h2 class="text-2xl font-semibold mb-6 text-blue-400">Процесс работы с системой</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Шаг 1 -->
+                <div class="glass-card p-6 bg-opacity-30 feature-card">
+                    <div class="rounded-full bg-blue-500 flex items-center justify-center h-12 w-12 mb-4">
+                        <span class="text-white font-bold text-xl">1</span>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Авторизация</h3>
+                    <p class="text-gray-300">Войдите в систему, используя ваши учетные данные. Если у вас еще нет аккаунта, пройдите регистрацию.</p>
+                </div>
+                
+                <!-- Шаг 2 -->
+                <div class="glass-card p-6 bg-opacity-30 feature-card">
+                    <div class="rounded-full bg-blue-500 flex items-center justify-center h-12 w-12 mb-4">
+                        <span class="text-white font-bold text-xl">2</span>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Загрузка работы</h3>
+                    <p class="text-gray-300">Загрузите документ в формате PDF или DOCX, нажав на кнопку "Загрузить документ" на странице дашборда.</p>
+                </div>
+                
+                <!-- Шаг 3 -->
+                <div class="glass-card p-6 bg-opacity-30 feature-card">
+                    <div class="rounded-full bg-blue-500 flex items-center justify-center h-12 w-12 mb-4">
+                        <span class="text-white font-bold text-xl">3</span>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Анализ результатов</h3>
+                    <p class="text-gray-300">Изучите результаты анализа, сильные и слабые стороны работы, а также рекомендации по улучшению.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Подробное описание интерфейса -->
+        <div class="mb-10">
+            <h2 class="text-2xl font-semibold mb-6 text-blue-400">Описание интерфейса</h2>
+            
+            <div class="space-y-6">
+                <div class="glass-card p-6 bg-opacity-30">
+                    <h3 class="font-semibold text-lg mb-2">Дашборд</h3>
+                    <p class="text-gray-300 mb-2">На странице дашборда вы можете увидеть историю всех ваших проверок. Для каждой проверки отображается:</p>
+                    <ul class="list-disc pl-5 text-gray-300 space-y-1">
+                        <li>Название файла</li>
+                        <li>Дата проверки</li>
+                        <li>Статус обработки</li>
+                        <li>Общая оценка</li>
+                        <li>Кнопки для просмотра результатов и удаления проверки</li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card p-6 bg-opacity-30">
+                    <h3 class="font-semibold text-lg mb-2">Просмотр документа</h3>
+                    <p class="text-gray-300 mb-2">При просмотре документа вы увидите:</p>
+                    <ul class="list-disc pl-5 text-gray-300 space-y-1">
+                        <li>Исходный текст документа</li>
+                        <li>Результаты анализа с оценками по категориям</li>
+                        <li>Вкладки с детальным анализом, сильными и слабыми сторонами, рекомендациями</li>
+                    </ul>
+                </div>
+                
+                <div class="glass-card p-6 bg-opacity-30">
+                    <h3 class="font-semibold text-lg mb-2">Детальный анализ</h3>
+                    <p class="text-gray-300 mb-2">Страница детального анализа содержит:</p>
+                    <ul class="list-disc pl-5 text-gray-300 space-y-1">
+                        <li>Круговые диаграммы с оценками по категориям</li>
+                        <li>Подробный анализ структуры, логики, грамматики и оригинальности</li>
+                        <li>Конкретные рекомендации по улучшению работы</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Критерии оценки -->
+        <div class="mb-10">
+            <h2 class="text-2xl font-semibold mb-6 text-blue-400">Критерии оценки</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="glass-card p-6 bg-opacity-30">
+                    <div class="text-green-400 mb-4">
+                        <i class="fas fa-sitemap text-3xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Структура (0-100%)</h3>
+                    <p class="text-gray-300">Оценивается наличие и качество всех необходимых элементов, оформление работы, структурированность текста, баланс частей работы.</p>
+                </div>
+                
+                <div class="glass-card p-6 bg-opacity-30">
+                    <div class="text-purple-400 mb-4">
+                        <i class="fas fa-brain text-3xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Логика (0-100%)</h3>
+                    <p class="text-gray-300">Оценивается последовательность и связность аргументации, соответствие содержания теме, полнота раскрытия темы, качество аргументации.</p>
+                </div>
+                
+                <div class="glass-card p-6 bg-opacity-30">
+                    <div class="text-yellow-400 mb-4">
+                        <i class="fas fa-spell-check text-3xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Грамматика (0-100%)</h3>
+                    <p class="text-gray-300">Оценивается орфографическая и пунктуационная грамотность, синтаксическая корректность, соответствие научному стилю, точность формулировок.</p>
+                </div>
+                
+                <div class="glass-card p-6 bg-opacity-30">
+                    <div class="text-orange-400 mb-4">
+                        <i class="fas fa-lightbulb text-3xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-lg mb-2">Оригинальность (0-100%)</h3>
+                    <p class="text-gray-300">Оценивается уникальность текста, наличие собственных идей и суждений, критический анализ источников, творческий подход к решению задач.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Дополнительная информация -->
+        <div>
+            <h2 class="text-2xl font-semibold mb-6 text-blue-400">Дополнительная информация</h2>
+            
+            <div class="glass-card p-6 bg-opacity-30">
+                <ul class="list-disc pl-5 text-gray-300 space-y-3">
+                    <li>Система поддерживает документы в форматах PDF и DOCX размером до 10 МБ.</li>
+                    <li>Анализ документа может занять от нескольких секунд до нескольких минут в зависимости от размера файла.</li>
+                    <li>Все загруженные документы хранятся в системе и доступны в истории проверок.</li>
+                    <li>Вы можете удалить проверку и все связанные с ней данные в любое время.</li>
+                    <li>Для получения наилучших результатов рекомендуется загружать документы без сложного форматирования.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock main %}
