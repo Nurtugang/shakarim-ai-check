@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shakarim AI Check</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body class="gradient-bg min-h-screen">
+    <header class="container mx-auto px-4 py-6">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="text-white font-bold text-2xl logo-pulse">
+                    <span class="text-blue-400">Shakarim</span> AI Check
+                </div>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#" class="text-white hover:text-blue-300 transition">Главная</a>
+                <a href="#" class="text-white hover:text-blue-300 transition">О проекте</a>
+                <a href="#" class="text-white hover:text-blue-300 transition">Инструкция</a>
+                <a href="#" class="text-white hover:text-blue-300 transition">Контакты</a>
+            </nav>
+            <div class="md:hidden">
+                <button class="text-white">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    {% block main %}
+    {% endblock main %}
+
+
+    <footer class="container mx-auto px-4 py-8 mt-2">
+        <div class=" md:flex-row justify-between items-center glass-card p-6">
+            <div class="text-center text-gray-300 text-sm items-center">
+                <p>© 2025 Shakarim AI Check, Shakarim University</p>
+                <p>Разработано в рамках программы AI SANA</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Здесь будет JavaScript код для обработки авторизации
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Shakarim AI Check interface loaded');
+            // Заглушка для формы авторизации
+            const loginForm = document.querySelector('form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const text = document.getElementById('text').value;
+                    const password = document.getElementById('password').value;
+                    
+                    console.log('Login attempt:', { text });
+                    // Здесь будет интеграция с вашим API авторизации
+                });
+            }
+        });
+    </script>
+</body>
+</html>
