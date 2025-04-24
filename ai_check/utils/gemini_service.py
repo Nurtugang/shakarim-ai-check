@@ -98,7 +98,7 @@ def analyze_document(text, additional_instructions=""):
             contents=[prompt],
             config=types.GenerateContentConfig(
                 max_output_tokens=4096,
-                temperature=0.1,
+                temperature=0,
                 system_instruction=system_instruction,
                 tools=tools
             )
