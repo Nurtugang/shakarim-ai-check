@@ -152,10 +152,10 @@ def upload_document(request):
             check.save()
             
             # Предупреждение о большом размере текста
-            if len(extracted_text) > 5000 and not force_analyze:
+            if len(extracted_text) > 100000 and not force_analyze:
                 return JsonResponse({
                     'status': 'warning',
-                    'message': f'Документ содержит {len(extracted_text):,} символов (больше рекомендуемых 5,000). Текст будет сокращен для анализа.',
+                    'message': f'Документ содержит {len(extracted_text):,} символов (больше рекомендуемых 100,000). Текст будет сокращен для анализа.',
                     'char_count': len(extracted_text),
                     'check_id': check.id
                 })
