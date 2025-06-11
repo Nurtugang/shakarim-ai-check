@@ -27,6 +27,7 @@ class Check(models.Model):
     # JSON-поля для хранения детального анализа
     detailed_analysis = models.JSONField(null=True, blank=True, verbose_name="Детальный анализ")
     recommendations = models.JSONField(null=True, blank=True, verbose_name="Рекомендации")
+    errors_analysis = models.JSONField(null=True, blank=True, verbose_name="Анализ ошибок")  # НОВОЕ ПОЛЕ
     
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")
@@ -58,5 +59,53 @@ class Check(models.Model):
         # Сохраняем детальный анализ и рекомендации
         self.detailed_analysis = analysis_result
         self.recommendations = analysis_result.get('recommendations', {})
+        
+        # Сохраняем анализ ошибок (НОВОЕ)
+        self.errors_analysis = analysis_result.get('errors', [])
+        
         self.status = 'completed'
         self.save()
+    
+    def get_errors_by_type(self, error_type=None):
+        """
+        Возвращает ошибки по типу
+        
+        Args:
+            error_type: Тип ошибки (grammar, style, logic, structure, originality) или None для всех
+            
+        Returns:
+            list: Список ошибок
+        """
+        if not self.errors_analysis:
+            return []
+        
+        errors = self.errors_analysis
+        if error_type:
+            errors = [error for error in errors if error.get('error_type') == error_type]
+        
+        return errors
+    
+    def get_errors_summary(self):
+        """
+        Возвращает сводку по ошибкам
+        
+        Returns:
+            dict: Статистика по типам ошибок
+        """
+        if not self.errors_analysis:
+            return {}
+        
+        summary = {
+            'total': len(self.errors_analysis),
+            'by_type': {},
+            'by_severity': {'high': 0, 'medium': 0, 'low': 0}
+        }
+        
+        for error in self.errors_analysis:
+            error_type = error.get('error_type', 'unknown')
+            severity = error.get('severity', 'medium')
+            
+            summary['by_type'][error_type] = summary['by_type'].get(error_type, 0) + 1
+            summary['by_severity'][severity] = summary['by_severity'].get(severity, 0) + 1
+        
+        return summary

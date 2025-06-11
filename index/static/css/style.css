@@ -1,37 +1,59 @@
 .gradient-bg {
-    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+   background: linear-gradient(135deg, #0f172a, #1e293b, #334155);
 }
+
 .glass-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+   background: rgba(255, 255, 255, 0.05);
+   backdrop-filter: blur(8px);
+   border-radius: 12px;
+   border: 1px solid rgba(255, 255, 255, 0.1);
+   transition: all 0.3s ease;
 }
+
+.glass-card:hover {
+   background: rgba(255, 255, 255, 0.08);
+   border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
 .btn-gradient {
-    background: linear-gradient(135deg, #1e9bff, #3776aa);
-    transition: all 0.3s ease;
+   background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+   transition: all 0.2s ease;
+   border: none;
 }
+
 .btn-gradient:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+   background: linear-gradient(135deg, #2563eb, #1e40af);
+   transform: translateY(-1px);
+   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 }
+
 .logo-pulse {
-    animation: pulse 2s infinite;
+   animation: none;
+   transition: transform 0.2s ease;
 }
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    100% {
-        transform: scale(1);
-    }
+
+.logo-pulse:hover {
+   transform: scale(1.02);
 }
+
 .feature-card {
-    transition: all 0.3s ease;
+   transition: all 0.2s ease;
 }
+
 .feature-card:hover {
-    transform: translateY(-10px);
+   transform: translateY(-4px);
+   background: rgba(255, 255, 255, 0.08);
+}
+
+/* Дополнительные стили для спокойного дизайна */
+.text-primary {
+   color: #e2e8f0;
+}
+
+.text-secondary {
+   color: #94a3b8;
+}
+
+.border-subtle {
+   border-color: rgba(255, 255, 255, 0.1);
 }

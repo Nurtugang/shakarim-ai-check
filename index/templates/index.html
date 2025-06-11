@@ -46,61 +46,230 @@
             </div>
         </div>
         
-        <!-- Правая часть - Форма авторизации или картинка AI-SANA -->
+        <!-- Правая часть -->
         <div class="md:w-1/2">
             {% if user.is_authenticated %}
-                <!-- Показываем картинку AI-SANA для авторизованных пользователей -->
+                <!-- Персонализированное приветствие для авторизованных пользователей -->
+                <div class="glass-card p-6 text-white max-w-md mx-auto mb-6">
+                    <!-- Приветствие -->
+                    <div class="text-center mb-6">
+                        <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-user text-2xl text-white"></i>
+                        </div>
+                        
+                        <h2 class="text-2xl font-bold mb-2">
+                            Добро пожаловать!
+                        </h2>
+                        
+                        <div class="text-gray-300">
+                            {% if user.first_name or user.last_name %}
+                                <p class="text-lg font-medium text-white mb-1">
+                                    {{ user.first_name }} {{ user.last_name }}
+                                </p>
+                                <p class="text-sm">ID: {{ user.username }}</p>
+                            {% else %}
+                                <p class="text-lg font-medium text-white">{{ user.username }}</p>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Индикатор типа авторизации -->
+                        {% if user_stats.auth_type == 'api' and user_stats.auth_source == 'platonus' %}
+                            <div class="mt-3 inline-flex items-center px-3 py-1 rounded-full text-xs bg-green-500/20 text-green-300 border border-green-500/30">
+                                <i class="fas fa-university mr-2"></i>
+                                Авторизация через ИС Platonus
+                            </div>
+                        {% elif user_stats.auth_type == 'local' %}
+                            <div class="mt-3 inline-flex items-center px-3 py-1 rounded-full text-xs bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                <i class="fas fa-key mr-2"></i>
+                                Локальный аккаунт
+                            </div>
+                        {% else %}
+                            <!-- Fallback для определения типа по паролю (старый метод) -->
+                            {% if not user.has_usable_password %}
+                                <div class="mt-3 inline-flex items-center px-3 py-1 rounded-full text-xs bg-green-500/20 text-green-300 border border-green-500/30">
+                                    <i class="fas fa-university mr-2"></i>
+                                    Авторизация через ИС Platonus
+                                </div>
+                            {% else %}
+                                <div class="mt-3 inline-flex items-center px-3 py-1 rounded-full text-xs bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                                    <i class="fas fa-key mr-2"></i>
+                                    Локальный аккаунт
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Статистика пользователя -->
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="text-center p-3 bg-gray-800/50 rounded-lg">
+                            <div class="text-2xl font-bold text-blue-400">{{ user_stats.total_checks|default:0 }}</div>
+                            <div class="text-xs text-gray-400">Проверок</div>
+                        </div>
+                        <div class="text-center p-3 bg-gray-800/50 rounded-lg">
+                            <div class="text-2xl font-bold text-green-400">
+                                {% if user_stats.avg_score %}
+                                    {{ user_stats.avg_score|floatformat:1 }}%
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </div>
+                            <div class="text-xs text-gray-400">Средний балл</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Кнопки действий -->
+                    <div class="space-y-3">
+                        <a href="{% url 'dashboard' %}" class="w-full btn-gradient py-3 rounded-lg text-white font-semibold shadow-lg block text-center">
+                            <i class="fas fa-tachometer-alt mr-2"></i>
+                            Перейти к проверкам
+                        </a>
+                        
+                        {% if user_stats.last_check %}
+                            <a href="{% url 'document_view' user_stats.last_check.id %}" class="w-full bg-gray-700 hover:bg-gray-600 py-3 rounded-lg text-white font-semibold transition block text-center">
+                                <i class="fas fa-file-alt mr-2"></i>
+                                Последняя проверка
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- Картинка AI-SANA -->
                 <div class="glass-card p-6 text-white max-w-md mx-auto">
-                    <h2 class="text-2xl font-bold mb-4 text-center">Программа AI-SANA</h2>
+                    <h3 class="text-xl font-semibold mb-4 text-center">Программа AI-SANA</h3>
                     <div class="rounded-lg overflow-hidden mb-4">
                         <img src="{% static 'img/ai-sana.png' %}" alt="AI-SANA Program" class="w-full">
                     </div>
-                    <p class="text-gray-300 text-sm mb-4">Министерство науки и высшего образования представило инновационную программу AI-SANA по искусственному интеллекту</p>
-                    <a href="{% url 'dashboard' %}" class="w-full btn-gradient py-3 rounded-lg text-white font-semibold shadow-lg block text-center">
-                        Перейти к проверке работ
-                    </a>
+                    <p class="text-gray-300 text-sm text-center">Министерство науки и высшего образования представило инновационную программу AI-SANA по искусственному интеллекту</p>
                 </div>
+                
             {% else %}
-                <!-- Показываем форму авторизации для неавторизованных пользователей -->
-                <div class="glass-card p-8 text-white max-w-md mx-auto">
+                <!-- Форма авторизации для неавторизованных пользователей -->
+                <div class="glass-card p-8 text-white max-w-md mx-auto" x-data="{ activeTab: 'university' }">
                     <h2 class="text-2xl font-bold mb-6 text-center">Авторизация</h2>
-                    <form method="post" action="{% url 'login' %}">
-                        {% csrf_token %}
-                        <div class="mb-4">
-                            <label class="block text-gray-300 mb-2" for="username">Логин</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-user text-gray-400"></i>
-                                </div>
-                                <input type="text" id="username" name="username" class="w-full py-3 pl-10 pr-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ваш логин">
-                            </div>
-                        </div>
-                        <div class="mb-6">
-                            <label class="block text-gray-300 mb-2" for="password">Пароль</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="fas fa-lock text-gray-400"></i>
-                                </div>
-                                <input type="password" id="password" name="password" class="w-full py-3 pl-10 pr-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
-                                    <i class="fas fa-eye text-gray-400 cursor-pointer hover:text-gray-300 toggle-password"></i>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="flex items-center justify-between mb-6">
-                            <div class="flex items-center">
-                                <input type="checkbox" id="remember" name="remember" class="rounded bg-gray-800 border-gray-500 text-blue-500 focus:ring-blue-500">
-                                <label for="remember" class="ml-2 text-sm text-gray-300">Запомнить меня</label>
-                            </div>
-                            <a href="#" class="text-sm text-blue-400 hover:underline">Забыли пароль?</a>
-                        </div>
-                        <button type="submit" class="w-full btn-gradient py-3 rounded-lg text-white font-semibold shadow-lg">
-                            Войти
-                        </button>
-                    </form>
                     
-                    <div class="mt-6 text-center text-gray-300 text-sm">
-                        <p>Нет аккаунта? <a href="{% url 'register' %}" class="text-blue-400 hover:underline">Зарегистрироваться</a></p>
+                    <!-- Табы для выбора способа входа -->
+                    <div class="flex mb-6 bg-gray-800/50 p-1 rounded-lg">
+                        <button @click="activeTab = 'university'" 
+                                :class="activeTab === 'university' ? 'bg-blue-500 text-white' : 'text-gray-400 hover:text-gray-300'"
+                                class="flex-1 py-2 px-4 rounded-md transition-all duration-200 text-sm font-medium">
+                            <i class="fas fa-university mr-2"></i>
+                            Через Platonus
+                        </button>
+                        <button @click="activeTab = 'local'" 
+                                :class="activeTab === 'local' ? 'bg-blue-500 text-white' : 'text-gray-400 hover:text-gray-300'"
+                                class="flex-1 py-2 px-4 rounded-md transition-all duration-200 text-sm font-medium">
+                            <i class="fas fa-key mr-2"></i>
+                            Локальный вход
+                        </button>
+                    </div>
+                    
+                    <!-- Форма входа через университетскую систему -->
+                    <div x-show="activeTab === 'university'" x-transition>
+                        <!-- Информация о входе через Platonus -->
+                        <div class="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4 mb-6">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-university text-blue-400 mr-2"></i>
+                                <span class="font-semibold text-blue-400">Вход через ИС Platonus</span>
+                            </div>
+                            <p class="text-gray-300 text-sm">
+                                Используйте ваши учетные данные из университетской системы
+                            </p>
+                        </div>
+                        
+                        <form method="post" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label class="block text-gray-300 mb-2" for="username-uni">Университетский ID</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-user text-gray-400"></i>
+                                    </div>
+                                    <input type="text" id="username-uni" name="username" class="w-full py-3 pl-10 pr-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Введите ваш ID">
+                                </div>
+                                <p class="text-xs text-gray-400 mt-1">Студенческий или преподавательский ID</p>
+                            </div>
+                            <div class="mb-6">
+                                <label class="block text-gray-300 mb-2" for="password-uni">Пароль</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-lock text-gray-400"></i>
+                                    </div>
+                                    <input type="password" id="password-uni" name="password" class="w-full py-3 pl-10 pr-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                        <i class="fas fa-eye text-gray-400 cursor-pointer hover:text-gray-300 toggle-password"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="remember-uni" name="remember" class="rounded bg-gray-800 border-gray-500 text-blue-500 focus:ring-blue-500">
+                                    <label for="remember-uni" class="ml-2 text-sm text-gray-300">Запомнить меня</label>
+                                </div>
+                                <a href="{% url 'contacts' %}" class="text-sm text-blue-400 hover:underline">Нужна помощь?</a>
+                            </div>
+                            <button type="submit" class="w-full btn-gradient py-3 rounded-lg text-white font-semibold shadow-lg">
+                                <i class="fas fa-university mr-2"></i>
+                                Войти через Platonus
+                            </button>
+                        </form>
+                        
+                        <div class="mt-6 text-center text-gray-300 text-sm">
+                            <p>Автоматическая регистрация при первом входе</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Форма локального входа -->
+                    <div x-show="activeTab === 'local'" x-transition>
+                        <!-- Информация о локальном входе -->
+                        <div class="bg-gray-500/20 border border-gray-500/30 rounded-lg p-4 mb-6">
+                            <div class="flex items-center mb-2">
+                                <i class="fas fa-key text-gray-400 mr-2"></i>
+                                <span class="font-semibold text-gray-400">Локальный аккаунт</span>
+                            </div>
+                            <p class="text-gray-300 text-sm">
+                                Для администраторов и зарегистрированных пользователей
+                            </p>
+                        </div>
+                        
+                        <form method="post" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <div class="mb-4">
+                                <label class="block text-gray-300 mb-2" for="username-local">Имя пользователя</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-user text-gray-400"></i>
+                                    </div>
+                                    <input type="text" id="username-local" name="username" class="w-full py-3 pl-10 pr-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Логин">
+                                </div>
+                            </div>
+                            <div class="mb-6">
+                                <label class="block text-gray-300 mb-2" for="password-local">Пароль</label>
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <i class="fas fa-lock text-gray-400"></i>
+                                    </div>
+                                    <input type="password" id="password-local" name="password" class="w-full py-3 pl-10 pr-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    <div class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                        <i class="fas fa-eye text-gray-400 cursor-pointer hover:text-gray-300 toggle-password"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between mb-6">
+                                <div class="flex items-center">
+                                    <input type="checkbox" id="remember-local" name="remember" class="rounded bg-gray-800 border-gray-500 text-blue-500 focus:ring-blue-500">
+                                    <label for="remember-local" class="ml-2 text-sm text-gray-300">Запомнить меня</label>
+                                </div>
+                                <a href="{% url 'contacts' %}" class="text-sm text-blue-400 hover:underline">Нужна помощь?</a>
+                            </div>
+                            <button type="submit" class="w-full bg-gray-700 hover:bg-gray-600 py-3 rounded-lg text-white font-semibold shadow-lg transition">
+                                <i class="fas fa-key mr-2"></i>
+                                Войти локально
+                            </button>
+                        </form>
+                        
+                        <div class="mt-6 text-center text-gray-300 text-sm">
+                            <p>Нет аккаунта? <a href="{% url 'register' %}" class="text-blue-400 hover:underline">Зарегистрироваться</a></p>
+                        </div>
                     </div>
                 </div>
                 
@@ -111,7 +280,7 @@
                         </div>
                         <div>
                             <h3 class="font-semibold mb-1">Нужна помощь?</h3>
-                            <p class="text-sm text-gray-300">Свяжитесь с администратором или обратитесь в техническую поддержку</p>
+                            <p class="text-sm text-gray-300">Обратитесь в IT отдел университета если у вас проблемы со входом</p>
                         </div>
                     </div>
                 </div>
@@ -119,4 +288,55 @@
         </div>
     </div>
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Переключение видимости пароля
+        const toggleButtons = document.querySelectorAll('.toggle-password');
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const passwordField = this.closest('div').querySelector('input');
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                
+                // Меняем иконку
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        });
+        
+        // Анимация переключения табов (если Alpine.js недоступен)
+        if (typeof Alpine === 'undefined') {
+            const universityBtn = document.querySelector('[data-tab="university"]');
+            const localBtn = document.querySelector('[data-tab="local"]');
+            const universityForm = document.querySelector('[data-content="university"]');
+            const localForm = document.querySelector('[data-content="local"]');
+            
+            if (universityBtn && localBtn) {
+                universityBtn.addEventListener('click', () => switchTab('university'));
+                localBtn.addEventListener('click', () => switchTab('local'));
+                
+                function switchTab(tab) {
+                    // Обновляем кнопки
+                    universityBtn.classList.toggle('bg-blue-500', tab === 'university');
+                    universityBtn.classList.toggle('text-white', tab === 'university');
+                    universityBtn.classList.toggle('text-gray-400', tab !== 'university');
+                    
+                    localBtn.classList.toggle('bg-blue-500', tab === 'local');
+                    localBtn.classList.toggle('text-white', tab === 'local');
+                    localBtn.classList.toggle('text-gray-400', tab !== 'local');
+                    
+                    // Показываем/скрываем формы
+                    if (universityForm && localForm) {
+                        universityForm.style.display = tab === 'university' ? 'block' : 'none';
+                        localForm.style.display = tab === 'local' ? 'block' : 'none';
+                    }
+                }
+            }
+        }
+    });
+</script>
+
+<!-- Подключаем Alpine.js для интерактивности -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
 {% endblock main %}

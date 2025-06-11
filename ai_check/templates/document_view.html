@@ -12,20 +12,39 @@
     <h1 class="text-2xl md:text-3xl font-bold text-white mb-6">{{ check.file_name }}</h1>
 
     <div class="flex flex-col lg:flex-row gap-6">
-        <!-- Исходный документ -->
+        <!-- Исходный документ с выделениями -->
         <div class="lg:w-1/2">
             <div class="glass-card p-4 mb-4">
                 <h2 class="text-xl font-semibold text-white mb-2">Исходный документ</h2>
+                
+                <!-- Фильтры ошибок -->
+                <div class="flex flex-wrap gap-2 mb-4" id="error-filters">
+                    <button class="filter-btn active" data-filter="all">
+                        Все замечания
+                    </button>
+                    <button class="filter-btn" data-filter="grammar">
+                        <span class="error-indicator grammar"></span> Грамматика
+                    </button>
+                    <button class="filter-btn" data-filter="style">
+                        <span class="error-indicator style"></span> Стиль
+                    </button>
+                    <button class="filter-btn" data-filter="logic">
+                        <span class="error-indicator logic"></span> Логика
+                    </button>
+                    <button class="filter-btn" data-filter="structure">
+                        <span class="error-indicator structure"></span> Структура
+                    </button>
+                </div>
             </div>
             
             <div class="glass-card p-6 h-screen overflow-auto">
-                <div class="bg-gray-900 rounded-lg p-6 text-white whitespace-pre-wrap font-mono text-sm">
-                    {{ check.extracted_text|linebreaks }}
+                <div class="bg-gray-900 rounded-lg p-6 text-white font-mono text-sm leading-relaxed" id="document-text">
+                    <!-- Текст с выделениями будет загружен через JavaScript -->
                 </div>
             </div>
         </div>
         
-        <!-- Анализ документа -->
+        <!-- Панель анализа -->
         <div class="lg:w-1/2">
             <div class="glass-card p-4 mb-4">
                 <h2 class="text-xl font-semibold text-white mb-2">Результаты анализа</h2>
@@ -47,22 +66,17 @@
             </div>
             
             <div class="glass-card p-6 h-screen overflow-auto">
-                <div x-data="{ activeTab: 'analysis' }">
+                <div x-data="{ activeTab: 'errors' }">
                     <div class="border-b border-gray-700 mb-4">
                         <ul class="flex flex-wrap -mb-px">
                             <li class="mr-2">
+                                <button @click="activeTab = 'errors'" :class="{'text-blue-400 border-b-2 border-blue-400': activeTab === 'errors', 'text-gray-400 hover:text-gray-300': activeTab !== 'errors'}" class="inline-block py-2 px-4 font-medium">
+                                    Найденные замечания
+                                </button>
+                            </li>
+                            <li class="mr-2">
                                 <button @click="activeTab = 'analysis'" :class="{'text-blue-400 border-b-2 border-blue-400': activeTab === 'analysis', 'text-gray-400 hover:text-gray-300': activeTab !== 'analysis'}" class="inline-block py-2 px-4 font-medium">
                                     Анализ
-                                </button>
-                            </li>
-                            <li class="mr-2">
-                                <button @click="activeTab = 'strengths'" :class="{'text-blue-400 border-b-2 border-blue-400': activeTab === 'strengths', 'text-gray-400 hover:text-gray-300': activeTab !== 'strengths'}" class="inline-block py-2 px-4 font-medium">
-                                    Сильные стороны
-                                </button>
-                            </li>
-                            <li class="mr-2">
-                                <button @click="activeTab = 'weaknesses'" :class="{'text-blue-400 border-b-2 border-blue-400': activeTab === 'weaknesses', 'text-gray-400 hover:text-gray-300': activeTab !== 'weaknesses'}" class="inline-block py-2 px-4 font-medium">
-                                    Слабые стороны
                                 </button>
                             </li>
                             <li class="mr-2">
@@ -71,6 +85,44 @@
                                 </button>
                             </li>
                         </ul>
+                    </div>
+                    
+                    <!-- Найденные ошибки -->
+                    <div x-show="activeTab === 'errors'" class="text-white space-y-4" id="errors-panel">
+                        <div class="text-center py-8 text-gray-400" id="no-errors-message">
+                            <i class="fas fa-search text-2xl mb-2"></i>
+                            <p>Кликните на выделенный фрагмент в тексте, чтобы увидеть детали замечания</p>
+                        </div>
+                        
+                        <!-- Детали выбранной ошибки -->
+                        <div id="error-details" class="hidden">
+                            <div class="glass-card p-4 mb-4">
+                                <h4 class="font-semibold mb-2 text-white">Выбранное замечание:</h4>
+                                <div class="bg-gray-800 p-3 rounded mb-3">
+                                    <p class="text-gray-300 italic" id="error-quote">Анализируемый фрагмент</p>
+                                </div>
+                                <div class="space-y-2">
+                                    <div class="flex items-center space-x-2">
+                                        <span class="error-indicator" id="error-type-indicator"></span>
+                                        <span class="text-sm font-medium" id="error-type-text">Тип замечания</span>
+                                        <span class="px-2 py-1 rounded text-xs" id="error-severity">Приоритет</span>
+                                    </div>
+                                    <p class="text-gray-300" id="error-description">Описание замечания</p>
+                                    <div class="bg-blue-900/20 border border-blue-500/30 rounded p-3 mt-3">
+                                        <h5 class="text-blue-400 font-medium mb-1">Рекомендация по улучшению:</h5>
+                                        <p class="text-blue-300" id="error-suggestion">Как улучшить</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Список всех ошибок -->
+                        <div id="errors-list">
+                            <h4 class="font-semibold mb-3 text-white">Все найденные замечания:</h4>
+                            <div class="space-y-2" id="errors-container">
+                                <!-- Ошибки будут загружены через JavaScript -->
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Анализ -->
@@ -101,100 +153,6 @@
                             <div class="text-gray-300">
                                 {{ originality_analysis|linebreaks }}
                             </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Сильные стороны -->
-                    <div x-show="activeTab === 'strengths'" class="text-white space-y-6">
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2 text-green-400">Структура</h3>
-                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
-                                {% for item in structure_strengths %}
-                                    <li>{{ item }}</li>
-                                {% empty %}
-                                    <li class="text-gray-500">Информация не найдена</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2 text-purple-400">Логика изложения</h3>
-                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
-                                {% for item in logic_strengths %}
-                                    <li>{{ item }}</li>
-                                {% empty %}
-                                    <li class="text-gray-500">Информация не найдена</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2 text-yellow-400">Грамматика и стиль</h3>
-                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
-                                {% for item in grammar_strengths %}
-                                    <li>{{ item }}</li>
-                                {% empty %}
-                                    <li class="text-gray-500">Информация не найдена</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2 text-orange-400">Оригинальность</h3>
-                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
-                                {% for item in originality_strengths %}
-                                    <li>{{ item }}</li>
-                                {% empty %}
-                                    <li class="text-gray-500">Информация не найдена</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                    
-                    <!-- Слабые стороны -->
-                    <div x-show="activeTab === 'weaknesses'" class="text-white space-y-6">
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2 text-green-400">Структура</h3>
-                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
-                                {% for item in structure_weaknesses %}
-                                    <li>{{ item }}</li>
-                                {% empty %}
-                                    <li class="text-gray-500">Информация не найдена</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2 text-purple-400">Логика изложения</h3>
-                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
-                                {% for item in logic_weaknesses %}
-                                    <li>{{ item }}</li>
-                                {% empty %}
-                                    <li class="text-gray-500">Информация не найдена</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2 text-yellow-400">Грамматика и стиль</h3>
-                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
-                                {% for item in grammar_weaknesses %}
-                                    <li>{{ item }}</li>
-                                {% empty %}
-                                    <li class="text-gray-500">Информация не найдена</li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                        
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2 text-orange-400">Оригинальность</h3>
-                            <ul class="list-disc pl-5 space-y-1 text-gray-300">
-                                {% for item in originality_weaknesses %}
-                                    <li>{{ item }}</li>
-                                {% empty %}
-                                    <li class="text-gray-500">Информация не найдена</li>
-                                {% endfor %}
-                            </ul>
                         </div>
                     </div>
                     
@@ -261,5 +219,375 @@
     </div>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+<style>
+/* Стили для выделения ошибок */
+.error-highlight {
+    position: relative;
+    cursor: pointer;
+    border-radius: 2px;
+    padding: 1px 2px;
+    transition: all 0.2s ease;
+}
+
+.error-highlight:hover {
+    opacity: 0.8;
+    transform: scale(1.02);
+}
+
+.error-highlight.grammar {
+    background-color: rgba(239, 68, 68, 0.3);
+    border-bottom: 2px solid #ef4444;
+}
+
+.error-highlight.style {
+    background-color: rgba(245, 158, 11, 0.3);
+    border-bottom: 2px solid #f59e0b;
+}
+
+.error-highlight.logic {
+    background-color: rgba(168, 85, 247, 0.3);
+    border-bottom: 2px solid #a855f7;
+}
+
+.error-highlight.structure {
+    background-color: rgba(34, 197, 94, 0.3);
+    border-bottom: 2px solid #22c55e;
+}
+
+.error-highlight.originality {
+    background-color: rgba(249, 115, 22, 0.3);
+    border-bottom: 2px solid #f97316;
+}
+
+.error-highlight.selected {
+    background-color: rgba(59, 130, 246, 0.4) !important;
+    border-bottom: 2px solid #3b82f6 !important;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+}
+
+.error-highlight.hidden-filter {
+    background-color: transparent !important;
+    border-bottom: none !important;
+    cursor: default;
+}
+
+/* Индикаторы типов ошибок */
+.error-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 4px;
+}
+
+.error-indicator.grammar { background-color: #ef4444; }
+.error-indicator.style { background-color: #f59e0b; }
+.error-indicator.logic { background-color: #a855f7; }
+.error-indicator.structure { background-color: #22c55e; }
+.error-indicator.originality { background-color: #f97316; }
+
+/* Кнопки фильтров */
+.filter-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    background-color: rgba(55, 65, 81, 0.5);
+    color: #9ca3af;
+    border: 1px solid rgba(75, 85, 99, 0.5);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+}
+
+.filter-btn:hover {
+    background-color: rgba(75, 85, 99, 0.5);
+    color: #e5e7eb;
+}
+
+.filter-btn.active {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    border-color: #3b82f6;
+}
+
+/* Карточки ошибок */
+.error-card {
+    background-color: rgba(31, 41, 55, 0.5);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.error-card:hover {
+    background-color: rgba(31, 41, 55, 0.8);
+    border-color: rgba(156, 163, 175, 0.5);
+}
+
+.error-card.selected {
+    border-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Значки критичности */
+.severity-high { background-color: #dc2626; color: white; }
+.severity-medium { background-color: #d97706; color: white; }
+.severity-low { background-color: #16a34a; color: white; }
+</style>
+
+<!-- Безопасная передача данных через Django json_script -->
+{{ check.extracted_text|json_script:"document-data" }}
+{{ check.errors_analysis|json_script:"errors-data" }}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Безопасное получение данных из Django
+    const documentText = JSON.parse(document.getElementById('document-data').textContent);
+    const errorsData = JSON.parse(document.getElementById('errors-data').textContent);
+    
+    console.log('Document text length:', documentText.length);
+    console.log('Errors count:', errorsData.length);
+    
+    let currentFilter = 'all';
+    let selectedErrorId = null;
+    
+    // Инициализация
+    initializeDocument();
+    initializeErrorsList();
+    initializeFilters();
+    
+    function initializeDocument() {
+        const documentContainer = document.getElementById('document-text');
+        if (!documentText || documentText.trim() === '') {
+            documentContainer.innerHTML = '<p class="text-gray-400">Текст документа не найден</p>';
+            return;
+        }
+        
+        // Создаем HTML с выделениями
+        let htmlText = escapeHtml(documentText);
+        
+        // Сортируем ошибки по позиции (от конца к началу, чтобы позиции не сбивались)
+        const sortedErrors = errorsData
+            .map((error, index) => ({...error, originalIndex: index}))
+            .filter(error => error.found && error.start_pos !== undefined && error.end_pos !== undefined)
+            .sort((a, b) => b.start_pos - a.start_pos);
+        
+        // Добавляем выделения для ошибок
+        sortedErrors.forEach(error => {
+            const errorId = `error-${error.originalIndex}`;
+            const beforeText = htmlText.substring(0, error.start_pos);
+            const errorText = htmlText.substring(error.start_pos, error.end_pos);
+            const afterText = htmlText.substring(error.end_pos);
+            
+            const highlightHtml = `<span class="error-highlight ${error.error_type}" data-error-id="${errorId}" data-error-index="${error.originalIndex}">${errorText}</span>`;
+            
+            htmlText = beforeText + highlightHtml + afterText;
+        });
+        
+        documentContainer.innerHTML = htmlText;
+        
+        // Добавляем обработчики кликов на выделения
+        document.querySelectorAll('.error-highlight').forEach(highlight => {
+            highlight.addEventListener('click', function() {
+                const errorIndex = parseInt(this.dataset.errorIndex);
+                selectError(errorIndex);
+            });
+        });
+    }
+    
+    function initializeErrorsList() {
+        const errorsContainer = document.getElementById('errors-container');
+        
+        if (!errorsData || errorsData.length === 0) {
+            errorsContainer.innerHTML = '<p class="text-gray-400">Замечания не найдены</p>';
+            return;
+        }
+        
+        errorsData.forEach((error, index) => {
+            const errorCard = createErrorCard(error, index);
+            errorsContainer.appendChild(errorCard);
+        });
+    }
+    
+    function createErrorCard(error, index) {
+        const card = document.createElement('div');
+        card.className = `error-card ${error.error_type}`;
+        card.dataset.errorIndex = index;
+        card.dataset.errorType = error.error_type;
+        
+        const severityClass = `severity-${error.severity}`;
+        const typeText = {
+            'grammar': 'Грамматика',
+            'style': 'Стиль',
+            'logic': 'Логика',
+            'structure': 'Структура',
+        }[error.error_type] || error.error_type;
+        
+        const quote = error.quote || 'Цитата не найдена';
+        const description = error.description || 'Описание отсутствует';
+        const severity = error.severity || 'medium';
+        
+        card.innerHTML = `
+            <div class="flex items-start justify-between mb-2">
+                <div class="flex items-center space-x-2">
+                    <span class="error-indicator ${error.error_type}"></span>
+                    <span class="text-sm font-medium text-white">${typeText}</span>
+                </div>
+                <span class="px-2 py-1 rounded text-xs ${severityClass}">${severity}</span>
+            </div>
+            <p class="text-gray-300 text-sm mb-2">${escapeHtml(description)}</p>
+            <div class="bg-gray-800 p-2 rounded text-xs text-gray-400 italic">
+                "${escapeHtml(quote.substring(0, 100))}${quote.length > 100 ? '...' : ''}"
+            </div>
+        `;
+        
+        card.addEventListener('click', () => selectError(index));
+        
+        return card;
+    }
+    
+    function selectError(index) {
+        if (!errorsData[index]) {
+            console.error('Error not found at index:', index);
+            return;
+        }
+        
+        const error = errorsData[index];
+        selectedErrorId = index;
+        
+        // Обновляем выделения в тексте
+        document.querySelectorAll('.error-highlight').forEach(highlight => {
+            highlight.classList.remove('selected');
+        });
+        
+        const selectedHighlight = document.querySelector(`[data-error-index="${index}"]`);
+        if (selectedHighlight) {
+            selectedHighlight.classList.add('selected');
+            selectedHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        
+        // Обновляем карточки ошибок
+        document.querySelectorAll('.error-card').forEach(card => {
+            card.classList.remove('selected');
+        });
+        
+        const selectedCard = document.querySelector(`.error-card[data-error-index="${index}"]`);
+        if (selectedCard) {
+            selectedCard.classList.add('selected');
+        }
+        
+        // Показываем детали ошибки
+        showErrorDetails(error);
+    }
+    
+    function showErrorDetails(error) {
+        const detailsContainer = document.getElementById('error-details');
+        const noErrorsMessage = document.getElementById('no-errors-message');
+        
+        // Скрываем сообщение "нет выбранных ошибок"
+        noErrorsMessage.style.display = 'none';
+        detailsContainer.classList.remove('hidden');
+        
+        // Заполняем детали
+        document.getElementById('error-quote').textContent = error.quote;
+        document.getElementById('error-type-indicator').className = `error-indicator ${error.error_type}`;
+        
+        const typeText = {
+            'grammar': 'Грамматическое замечание',
+            'style': 'Стилистическое замечание', 
+            'logic': 'Замечание по логике',
+            'structure': 'Структурное замечание',
+            'originality': 'Замечание по оригинальности'
+        }[error.error_type] || error.error_type;
+        
+        document.getElementById('error-type-text').textContent = typeText;
+        
+        const severityElement = document.getElementById('error-severity');
+        const severityText = {
+            'high': 'Высокая',
+            'medium': 'Средняя',
+            'low': 'Низкая'
+        }[error.severity] || error.severity;
+        
+        severityElement.textContent = severityText;
+        severityElement.className = `px-2 py-1 rounded text-xs severity-${error.severity}`;
+        
+        document.getElementById('error-description').textContent = error.description;
+        document.getElementById('error-suggestion').textContent = error.suggestion;
+    }
+    
+    function initializeFilters() {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const filter = this.dataset.filter;
+                setFilter(filter);
+                
+                // Обновляем активную кнопку
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    }
+    
+    function setFilter(filter) {
+    currentFilter = filter;
+    
+    // ДОБАВИТЬ: Сбрасываем выбранную ошибку при смене фильтра
+    selectedErrorId = null;
+    
+    // Убираем выделение с текста
+    document.querySelectorAll('.error-highlight').forEach(highlight => {
+        highlight.classList.remove('selected');
+    });
+    
+    // Убираем выделение с карточек ошибок
+    document.querySelectorAll('.error-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    
+    // Скрываем детали ошибки и показываем сообщение по умолчанию
+    const detailsContainer = document.getElementById('error-details');
+    const noErrorsMessage = document.getElementById('no-errors-message');
+    if (detailsContainer && noErrorsMessage) {
+        detailsContainer.classList.add('hidden');
+        noErrorsMessage.style.display = 'block';
+    }
+    
+    // Фильтруем выделения в тексте
+    document.querySelectorAll('.error-highlight').forEach(highlight => {
+        const errorIndex = parseInt(highlight.dataset.errorIndex);
+        if (isNaN(errorIndex) || !errorsData[errorIndex]) {
+            return;
+        }
+        
+        const error = errorsData[errorIndex];
+        
+        if (filter === 'all' || error.error_type === filter) {
+            highlight.classList.remove('hidden-filter');
+        } else {
+            highlight.classList.add('hidden-filter');
+        }
+    });
+    
+    // Фильтруем карточки ошибок
+    document.querySelectorAll('.error-card').forEach(card => {
+        const errorType = card.dataset.errorType;
+        
+        if (filter === 'all' || errorType === filter) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+});
+</script>
+
 {% endblock main %}

@@ -7,36 +7,40 @@
     <title>Shakarim AI Check</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="shortcut icon" href="{% static 'img/logo.png' %}" type="image/x-icon">
+    
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     
 </head>
 <body class="gradient-bg min-h-screen">
     <header class="container mx-auto px-4 py-6">
-        <div class="flex justify-between items-center">
-            <div class="flex items-center">
-                <div class="text-white font-bold text-2xl logo-pulse">
-                    <a href="{% url 'index' %}"><span class="text-blue-400">Shakarim</span> AI Check</a>
-                </div>
-            </div>
-            <nav class="hidden md:flex space-x-6">
-                <a href="{% url 'index' %}" class="text-white hover:text-blue-300 transition">Главная</a>
-                <a href="{% url 'instructions' %}" class="text-white hover:text-blue-300 transition">Инструкция</a>
-                <a href="{% url 'contacts' %}" class="text-white hover:text-blue-300 transition">Контакты</a>
-                {% if user.is_authenticated %}
-                    <a href="{% url 'dashboard' %}" class="text-white hover:text-blue-300 transition">Дашборд</a>
-                    <a href="{% url 'logout' %}" class="text-white hover:text-blue-300 transition">Выйти</a>
-                {% else %}
-                    <a href="{% url 'login' %}" class="text-white hover:text-blue-300 transition">Войти</a>
-                {% endif %}
-            </nav>
-            <div class="md:hidden">
-                <button class="text-white">
-                    <i class="fas fa-bars text-xl"></i>
-                </button>
-            </div>
-        </div>
-    </header>
+   <div class="flex justify-between items-center">
+       <div class="flex-1"></div>
+       <div class="text-white font-bold text-2xl logo-nopulse">
+           <a href="{% url 'index' %}">
+               <img src="{% static 'img/university.png' %}" alt="Shakarim AI Check Logo" class="h-10 inline-block">
+           </a>
+       </div>
+       <nav class="flex-1 hidden md:flex justify-end space-x-6">
+           <a href="{% url 'index' %}" class="text-white hover:text-blue-300 transition">Главная</a>
+           <a href="{% url 'instructions' %}" class="text-white hover:text-blue-300 transition">Инструкция</a>
+           <a href="{% url 'contacts' %}" class="text-white hover:text-blue-300 transition">Контакты</a>
+           {% if user.is_authenticated %}
+               <a href="{% url 'dashboard' %}" class="text-white hover:text-blue-300 transition">Дашборд</a>
+               <a href="{% url 'logout' %}" class="text-white hover:text-blue-300 transition">Выйти</a>
+           {% else %}
+               <a href="{% url 'login' %}" class="text-white hover:text-blue-300 transition">Войти</a>
+           {% endif %}
+       </nav>
+       <div class="md:hidden">
+           <button class="text-white">
+               <i class="fas fa-bars text-xl"></i>
+           </button>
+       </div>
+   </div>
+</header>
     {% block main %}
     {% endblock main %}
 

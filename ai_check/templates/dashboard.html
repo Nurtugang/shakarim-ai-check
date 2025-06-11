@@ -20,6 +20,9 @@
                 <label class="block text-gray-300 mb-2" for="document">Выберите файл (PDF или DOCX)</label>
                 <input type="file" id="document" name="document" accept=".pdf,.docx,.doc" 
                        class="w-full py-2 px-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <p class="text-sm text-gray-400 mt-1">
+                    Максимальный размер файла: 5 MB. Рекомендуемый объем: до 50 страниц (~120,000 символов).
+                </p>
             </div>
             
             <div>
@@ -60,6 +63,7 @@
                             <th class="py-3 px-4">Дата проверки</th>
                             <th class="py-3 px-4">Статус</th>
                             <th class="py-3 px-4">Общая оценка</th>
+                            <th class="py-3 px-4">Замечания</th>
                             <th class="py-3 px-4">Действия</th>
                         </tr>
                     </thead>
@@ -89,6 +93,16 @@
                                                  style="width: {{ check.overall_score }}%"></div>
                                         </div>
                                         <span>{{ check.overall_score|floatformat:1 }}%</span>
+                                    </div>
+                                {% else %}
+                                    <span class="text-gray-400">—</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-3 px-4">
+                                {% if check.errors_analysis %}
+                                    <div class="flex items-center space-x-1">
+                                        <span class="text-red-400">{{ check.errors_analysis|length }}</span>
+                                        <i class="fas fa-exclamation-triangle text-red-400 text-xs"></i>
                                     </div>
                                 {% else %}
                                     <span class="text-gray-400">—</span>
@@ -172,10 +186,40 @@
                 if (data.status === 'success') {
                     // Перенаправляем на страницу результатов
                     window.location.href = `/document/${data.check_id}/`;
+                } else if (data.status === 'warning') {
+                // Скрываем загрузочный индикатор для показа предупреждения
+                loadingContainer.classList.add('hidden');
+                
+                // Показываем предупреждение о большом размере
+                if (confirm(`${data.message}\n\nПродолжить анализ?`)) {
+                    // Если пользователь согласился - показываем загрузку снова и делаем новый запрос
+                    loadingContainer.classList.remove('hidden');
+                    
+                    // Делаем запрос заново, но теперь с флагом принудительного анализа
+                    const newFormData = new FormData(uploadForm);
+                    newFormData.append('force_analyze', 'true');
+                    
+                    fetch('{% url "upload_document" %}', {
+                        method: 'POST',
+                        body: newFormData,
+                        headers: {'X-Requested-With': 'XMLHttpRequest'}
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        loadingContainer.classList.add('hidden');
+                        if (result.status === 'success') {
+                            window.location.href = `/document/${result.check_id}/`;
+                        } else {
+                            alert(`Ошибка: ${result.error}`);
+                            uploadContainer.classList.remove('hidden');
+                        }
+                    });
                 } else {
-                    alert(`Ошибка: ${data.error}`);
+                    // Отменяем и удаляем запись
+                    fetch(`/api/delete-check/${data.check_id}/`, {method: 'GET'});
                     uploadContainer.classList.remove('hidden');
                 }
+            }
             })
             .catch(error => {
                 loadingContainer.classList.add('hidden');

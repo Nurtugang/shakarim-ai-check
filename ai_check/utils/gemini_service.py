@@ -76,16 +76,31 @@ def analyze_document(text, additional_instructions=""):
                             "originality": {"type": "array", "items": {"type": "string"}, "description": "Рекомендации по оригинальности"}
                         },
                         "required": ["general", "structure", "logic", "grammar", "originality"]
+                    },
+                    "errors": {
+                        "type": "array",
+                        "description": "Массив найденных ошибок и проблем",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "quote": {"type": "string", "description": "Точная цитата из текста с ошибкой"},
+                                "error_type": {"type": "string", "enum": ["grammar", "style", "logic", "structure"], "description": "Тип ошибки"},
+                                "description": {"type": "string", "description": "Описание проблемы"},
+                                "suggestion": {"type": "string", "description": "Предложение по исправлению"},
+                                "severity": {"type": "string", "enum": ["high", "medium", "low"], "description": "Критичность ошибки"}
+                            },
+                            "required": ["quote", "error_type", "description", "suggestion", "severity"]
+                        }
                     }
                 },
-                "required": ["structure", "logic", "grammar", "originality", "recommendations"]
+                "required": ["structure", "logic", "grammar", "originality", "recommendations", "errors"]
             }
         }]
     }]
 
     try:
         # Ограничиваем размер текста, если он слишком большой
-        max_text_length = 30000  # примерное ограничение для Gemini
+        max_text_length = 120000  # обновленный лимит
         text_for_analysis = text
         if len(text) > max_text_length:
             text_for_analysis = text[:max_text_length] + "...\n[Текст был сокращен из-за ограничений размера]"
@@ -97,8 +112,8 @@ def analyze_document(text, additional_instructions=""):
             model="gemini-2.0-flash",
             contents=[prompt],
             config=types.GenerateContentConfig(
-                max_output_tokens=4096,
-                temperature=0.1,
+                max_output_tokens=8192,  # увеличен для массива ошибок
+                temperature=0,
                 system_instruction=system_instruction,
                 tools=tools
             )
@@ -111,6 +126,11 @@ def analyze_document(text, additional_instructions=""):
                     if part.function_call.name == "analyze_document":
                         # Преобразуем результат в словарь Python
                         result = json.loads(part.function_call.args)
+                        
+                        # Обрабатываем ошибки - добавляем позиции в тексте
+                        if 'errors' in result:
+                            result['errors'] = process_error_positions(text_for_analysis, result['errors'])
+                        
                         return result
             
             # Если функциональный вызов не сработал, пытаемся распарсить текст
@@ -124,6 +144,11 @@ def analyze_document(text, additional_instructions=""):
                     json_str = json_str.split('```')[1].split('```')[0].strip()
                     
                 result = json.loads(json_str)
+                
+                # Обрабатываем ошибки
+                if 'errors' in result:
+                    result['errors'] = process_error_positions(text_for_analysis, result['errors'])
+                
                 return result
             except json.JSONDecodeError:
                 # Если не удалось извлечь JSON, возвращаем ошибку
@@ -142,3 +167,94 @@ def analyze_document(text, additional_instructions=""):
             "error": f"Ошибка при запросе к Gemini API: {str(e)}",
             "raw_response": None
         }
+
+def process_error_positions(text, errors):
+    """
+    Обрабатывает массив ошибок и добавляет позиции в тексте
+    
+    Args:
+        text: Исходный текст документа
+        errors: Массив ошибок от Gemini
+        
+    Returns:
+        list: Массив ошибок с добавленными позициями
+    """
+    processed_errors = []
+    
+    for error in errors:
+        quote = error.get('quote', '')
+        if not quote:
+            continue
+            
+        # Ищем цитату в тексте
+        position = find_text_position(text, quote)
+        
+        if position:
+            error['start_pos'] = position['start']
+            error['end_pos'] = position['end']
+            error['found'] = True
+        else:
+            # Пытаемся найти похожий фрагмент
+            similar_pos = find_similar_text(text, quote)
+            if similar_pos:
+                error['start_pos'] = similar_pos['start']
+                error['end_pos'] = similar_pos['end']
+                error['found'] = True
+                error['approximate'] = True
+            else:
+                error['found'] = False
+        
+        processed_errors.append(error)
+    
+    return processed_errors
+
+def find_text_position(text, quote):
+    """
+    Находит точную позицию цитаты в тексте
+    
+    Args:
+        text: Исходный текст
+        quote: Цитата для поиска
+        
+    Returns:
+        dict: Позиции начала и конца или None
+    """
+    # Прямой поиск
+    start = text.find(quote)
+    if start != -1:
+        return {"start": start, "end": start + len(quote)}
+    
+    # Поиск без учета регистра
+    start = text.lower().find(quote.lower())
+    if start != -1:
+        return {"start": start, "end": start + len(quote)}
+    
+    return None
+
+def find_similar_text(text, quote):
+    """
+    Находит похожий фрагмент текста (упрощенная версия)
+    
+    Args:
+        text: Исходный текст
+        quote: Цитата для поиска
+        
+    Returns:
+        dict: Приблизительные позиции или None
+    """
+    # Разбиваем цитату на слова и ищем фрагмент с несколькими словами
+    words = quote.split()
+    if len(words) < 3:
+        return None
+    
+    # Ищем фрагмент с первыми 3-5 словами
+    search_fragment = ' '.join(words[:min(5, len(words))])
+    start = text.lower().find(search_fragment.lower())
+    
+    if start != -1:
+        # Приблизительно определяем конец
+        estimated_end = start + len(quote)
+        actual_end = min(estimated_end, len(text))
+        return {"start": start, "end": actual_end}
+    
+    return None

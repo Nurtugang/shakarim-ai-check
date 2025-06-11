@@ -9,6 +9,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+AUTHENTICATION_BACKENDS = [
+    'index.backends.ExternalAPIBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -91,3 +95,7 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EXTERNAL_API_TIMEOUT = 10
+
+EXTERNAL_AUTH_API_URL = "https://apisdo.semgu.kz/apimobile/auth/login"

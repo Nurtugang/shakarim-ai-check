@@ -78,7 +78,8 @@ def check_detail(request, check_id):
 def document_view(request, check_id):
     """Страница просмотра документа с результатами анализа бок о бок"""
     check = get_object_or_404(Check, id=check_id, user=request.user)
-    
+    print(f"Extracted text length: {len(check.extracted_text) if check.extracted_text else 0}")
+    print(f"Errors count: {len(check.errors_analysis) if check.errors_analysis else 0}")
     # Распаковываем данные анализа для шаблона
     context = {
         'check': check,
@@ -114,6 +115,7 @@ def document_view(request, check_id):
         context['originality_recommendations'] = check.recommendations.get('originality', [])
     
     return render(request, 'document_view.html', context)
+
 @login_required
 @require_POST
 def upload_document(request):
@@ -127,6 +129,13 @@ def upload_document(request):
         
         # Получаем системную инструкцию, если она есть
         system_instruction = request.POST.get('system_instruction', '')
+        force_analyze = request.POST.get('force_analyze', 'false') == 'true'
+        
+        # Проверка размера файла (максимум 5MB)
+        if document.size > 5 * 1024 * 1024:
+            return JsonResponse({
+                'error': f'Файл слишком большой ({document.size // 1024 // 1024} MB). Максимум 5 MB.'
+            }, status=400)
         
         # Создаем запись в базе данных
         check = Check.objects.create(
@@ -141,6 +150,15 @@ def upload_document(request):
             extracted_text = process_document(document)
             check.extracted_text = extracted_text
             check.save()
+            
+            # Предупреждение о большом размере текста
+            if len(extracted_text) > 5000 and not force_analyze:
+                return JsonResponse({
+                    'status': 'warning',
+                    'message': f'Документ содержит {len(extracted_text):,} символов (больше рекомендуемых 5,000). Текст будет сокращен для анализа.',
+                    'char_count': len(extracted_text),
+                    'check_id': check.id
+                })
             
             # Отправляем текст на анализ в Gemini
             analysis_result = analyze_document(extracted_text, system_instruction)
@@ -168,7 +186,8 @@ def upload_document(request):
                     'grammar': check.grammar_score, 
                     'originality': check.originality_score,
                     'overall': check.overall_score
-                }
+                },
+                'errors_count': len(check.errors_analysis) if check.errors_analysis else 0
             })
             
         except ValueError as e:
@@ -196,12 +215,16 @@ def user_checks(request):
     
     checks_data = []
     for check in checks:
+        # Получаем статистику ошибок
+        errors_summary = check.get_errors_summary()
+        
         checks_data.append({
             'id': check.id,
             'file_name': check.file_name,
             'status': check.status,
             'created_at': check.created_at.strftime('%d.%m.%Y %H:%M'),
-            'overall_score': check.overall_score
+            'overall_score': check.overall_score,
+            'errors_count': errors_summary.get('total', 0)
         })
     
     return JsonResponse({'checks': checks_data})
