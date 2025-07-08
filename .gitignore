@@ -24,3 +24,6 @@ logs/
 logs/*
 
 shakarim_ai_check/gemini_config.py
+
+tmp/
+tmp/*

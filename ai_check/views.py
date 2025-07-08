@@ -185,7 +185,7 @@ def upload_document(request):
             logger.info("Text successfully extracted and saved")
             
             # Предупреждение о большом размере текста
-            if len(extracted_text) > 100000 and not force_analyze:
+            if len(extracted_text) > 1000000 and not force_analyze:
                 logger.info(f"Text is too long ({len(extracted_text)} chars), showing warning")
                 return JsonResponse({
                     'status': 'warning',

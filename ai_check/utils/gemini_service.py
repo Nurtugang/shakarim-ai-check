@@ -3,6 +3,14 @@ from google.genai import types
 import json
 from shakarim_ai_check.gemini_config import client
 from .system_prompt import get_system_prompt
+import logging
+import re
+import os
+import datetime
+from django.conf import settings
+
+logger = logging.getLogger('ai_check')
+
 
 def analyze_document(text, additional_instructions=""):
     """
@@ -100,7 +108,7 @@ def analyze_document(text, additional_instructions=""):
 
     try:
         # Ограничиваем размер текста, если он слишком большой
-        max_text_length = 120000  # обновленный лимит
+        max_text_length = 1000000  # обновленный лимит
         text_for_analysis = text
         if len(text) > max_text_length:
             text_for_analysis = text[:max_text_length] + "...\n[Текст был сокращен из-за ограничений размера]"
@@ -112,50 +120,105 @@ def analyze_document(text, additional_instructions=""):
             model="gemini-2.0-flash",
             contents=[prompt],
             config=types.GenerateContentConfig(
-                max_output_tokens=8192,  # увеличен для массива ошибок
+                max_output_tokens=8000,  # увеличен для массива ошибок
                 temperature=0,
                 system_instruction=system_instruction,
                 tools=tools
             )
         )
         
+        save_gemini_response(response)
+        if (response.candidates and 
+            response.candidates[0].finish_reason and 
+            str(response.candidates[0].finish_reason) == 'FinishReason.MAX_TOKENS'):
+            
+            logger.warning("Gemini response was truncated due to MAX_TOKENS limit")
+            return {
+                "error": "Ответ от Gemini был обрезан из-за лимита токенов. Попробуйте загрузить более короткий документ.",
+                "finish_reason": "MAX_TOKENS"
+            }
+        
+        # LOGS
+        logger.info(f"Gemini response candidates: {len(response.candidates) if response.candidates else 0}")
+        if response.candidates:
+            logger.info(f"First candidate parts: {len(response.candidates[0].content.parts)}")
+            for i, part in enumerate(response.candidates[0].content.parts):
+                logger.info(f"Part {i}: has_function_call={hasattr(part, 'function_call')}, has_text={hasattr(part, 'text')}")
+                if hasattr(part, 'function_call') and part.function_call:
+                    logger.info(f"Function call name: {part.function_call.name}")
+                if hasattr(part, 'text'):
+                    logger.info(f"Text content preview: {part.text[:200]}...")
+        
         # Если используется функциональный вызов, получаем данные из него
         if response.candidates and response.candidates[0].content.parts:
             for part in response.candidates[0].content.parts:
                 if hasattr(part, 'function_call') and part.function_call:
                     if part.function_call.name == "analyze_document":
-                        # Преобразуем результат в словарь Python
-                        result = json.loads(part.function_call.args)
+                        try:
+                            # Преобразуем результат в словарь Python
+                            result = json.loads(part.function_call.args)
+                            
+                            # Обрабатываем ошибки - добавляем позиции в тексте
+                            if 'errors' in result:
+                                result['errors'] = process_error_positions(text_for_analysis, result['errors'])
+                            
+                            return result
+                        except Exception as e:
+                            logger.error(f"Error parsing function call result: {str(e)}")
+                            
+                # НОВОЕ: Если есть текст, пытаемся его распарсить
+                if hasattr(part, 'text') and part.text:
+                    try:
+                        raw_response = part.text
+                        logger.info(f"Trying to parse text response: {raw_response[:500]}...")
                         
-                        # Обрабатываем ошибки - добавляем позиции в тексте
+                        # Попытка извлечь JSON из текста
+                        json_str = raw_response.strip()
+                        if json_str.startswith('```json'):
+                            json_str = json_str.split('```json')[1].split('```')[0].strip()
+                        elif json_str.startswith('```'):
+                            json_str = json_str.split('```')[1].split('```')[0].strip()
+                            
+                        # Очистка от управляющих символов
+                        json_str = re.sub(r'[\x00-\x1f\x7f-\x9f]', '', json_str)  # Удаляем управляющие символы
+                        json_str = json_str.replace('\t', ' ')  # Заменяем табуляцию на пробел
+
+                        # Проверяем, что JSON не обрывается посередине строки
+                        if json_str.count('"') % 2 != 0:
+                            # Если нечетное количество кавычек, обрезаем до последней закрытой кавычки
+                            last_quote = json_str.rfind('"')
+                            if last_quote > 0:
+                                # Ищем последнюю закрывающую скобку перед последней кавычкой
+                                temp_str = json_str[:last_quote]
+                                last_brace = max(temp_str.rfind('}'), temp_str.rfind(']'))
+                                if last_brace > 0:
+                                    json_str = json_str[:last_brace + 1]
+                                    logger.warning("JSON was truncated due to unterminated string")
+
+                        result = json.loads(json_str)
+                        
+                        # Обрабатываем ошибки
                         if 'errors' in result:
                             result['errors'] = process_error_positions(text_for_analysis, result['errors'])
                         
                         return result
-            
-            # Если функциональный вызов не сработал, пытаемся распарсить текст
-            raw_response = response.text
-            try:
-                # Попытка извлечь JSON из текста
-                json_str = raw_response.strip()
-                if json_str.startswith('```json'):
-                    json_str = json_str.split('```json')[1].split('```')[0].strip()
-                elif json_str.startswith('```'):
-                    json_str = json_str.split('```')[1].split('```')[0].strip()
-                    
-                result = json.loads(json_str)
-                
-                # Обрабатываем ошибки
-                if 'errors' in result:
-                    result['errors'] = process_error_positions(text_for_analysis, result['errors'])
-                
-                return result
-            except json.JSONDecodeError:
-                # Если не удалось извлечь JSON, возвращаем ошибку
-                return {
-                    "error": "Не удалось получить структурированный ответ от API",
-                    "raw_response": raw_response
+                    except json.JSONDecodeError as e:
+                        logger.error(f"JSON decode error: {str(e)}")
+                        logger.error(f"Raw response: {raw_response}")
+                        continue
+                    except Exception as e:
+                        logger.error(f"Error parsing text response: {str(e)}")
+                        continue
+                        
+            # Если ничего не сработало, возвращаем ошибку с подробностями
+            return {
+                "error": "Не удалось получить структурированный ответ от API",
+                "debug_info": {
+                    "candidates_count": len(response.candidates) if response.candidates else 0,
+                    "parts_count": len(response.candidates[0].content.parts) if response.candidates and response.candidates[0].content.parts else 0,
+                    "raw_response": response.text if hasattr(response, 'text') else None
                 }
+            }
                 
         return {
             "error": "Не удалось получить ответ от API Gemini",
@@ -258,3 +321,26 @@ def find_similar_text(text, quote):
         return {"start": start, "end": actual_end}
     
     return None
+
+
+def save_gemini_response(response):
+    """Сохраняет сырой ответ от Gemini в файл"""
+    try:
+        # Создаем папку tmp если её нет
+        tmp_dir = os.path.join(settings.BASE_DIR, 'tmp')
+        if not os.path.exists(tmp_dir):
+            os.makedirs(tmp_dir)
+        
+        # Генерируем имя файла с timestamp
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"gemini_{timestamp}.txt"
+        filepath = os.path.join(tmp_dir, filename)
+        
+        # Сохраняем ответ
+        with open(filepath, 'w', encoding='utf-8') as f:
+            f.write(str(response))
+        
+        logger.info(f"Gemini response saved to: {filename}")
+        
+    except Exception as e:
+        logger.error(f"Failed to save Gemini response: {str(e)}")
