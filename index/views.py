@@ -1,6 +1,9 @@
-from django.shortcuts import render
+from django.utils.translation import gettext as _
+from django.shortcuts import render, redirect
 from django.db.models import Avg, Count
 from ai_check.models import Check
+from .models import ContactMessage
+from django.contrib import messages
 
 def index(request):
     """Главная страница с персонализацией для авторизованных пользователей"""
@@ -46,4 +49,13 @@ def instructions(request):
     return render(request, 'instructions.html')
 
 def contacts(request):
+    if request.method == 'POST':
+        ContactMessage.objects.create(
+            name=request.POST.get('name'),
+            email=request.POST.get('email'),
+            subject=request.POST.get('subject'),
+            message=request.POST.get('message')
+        )
+        messages.success(request, _('Ваше сообщение успешно отправлено!'))
+        return redirect('contacts')
     return render(request, 'contacts.html')

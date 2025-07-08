@@ -16,3 +16,11 @@ db.sqlite3
 
 media/
 media/*
+
+static/
+static/*
+
+logs/
+logs/*
+
+shakarim_ai_check/gemini_config.py

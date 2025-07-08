@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
+from django.utils.translation import gettext as _
 from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.urls import reverse
 import logging
@@ -25,7 +26,7 @@ def login_view(request):
         remember = request.POST.get('remember')
         
         if not username or not password:
-            messages.error(request, 'Введите логин и пароль.')
+            messages.error(request, _('Введите логин и пароль.'))
             return render(request, 'auth.html', {'form_type': 'login'})
         
         # Используем кастомный backend для аутентификации
@@ -39,15 +40,11 @@ def login_view(request):
                 # Сессия будет удалена при закрытии браузера
                 request.session.set_expiry(0)
             
-            # Очищаем все сообщения и добавляем приветствие
-            list(messages.get_messages(request))
-            messages.success(request, f'Добро пожаловать, {user.first_name} {user.last_name}!')
-            
             # Перенаправляем на дашборд
             return redirect('index')
         else:
             # Добавляем только одно сообщение об ошибке
-            messages.error(request, 'Неверный логин или пароль. Проверьте данные и попробуйте снова.')
+            messages.error(request, _('Неверный логин или пароль. Проверьте данные и попробуйте снова.'))
             logger.warning(f"Failed login attempt for username: {username}")
     
     return render(request, 'auth.html', {'form_type': 'login'})
@@ -81,6 +78,6 @@ def logout_view(request):
     list(messages.get_messages(request))
     
     if user_name:
-        messages.success(request, f'До свидания, {user_name}!')
+        messages.success(request, _('До свидания, {}!').format(user_name))
     
     return redirect('index')

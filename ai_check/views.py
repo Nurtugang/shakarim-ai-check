@@ -1,3 +1,4 @@
+from django.utils.translation import gettext as _
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -15,7 +16,7 @@ from .models import Check
 from .utils.file_utils import process_document, save_uploaded_file
 from .utils.gemini_service import analyze_document
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('ai_check')
 
 def index(request):
     """Главная страница"""
@@ -126,6 +127,7 @@ def upload_document(request):
             return JsonResponse({'error': 'Файл не был загружен'}, status=400)
             
         document = request.FILES['document']
+        logger.info(f"Starting document processing: {document.name}, size: {document.size} bytes")
         
         # Получаем системную инструкцию, если она есть
         system_instruction = request.POST.get('system_instruction', '')
@@ -144,27 +146,62 @@ def upload_document(request):
             original_file=document,
             status='pending'
         )
+        logger.info(f"Created check record with ID: {check.id}")
+        
+        # Сбрасываем указатель файла в начало после сохранения
+        document.seek(0)
         
         try:
             # Извлекаем текст из документа
-            extracted_text = process_document(document)
+            try:
+                logger.info("Attempting to extract text from document")
+                extracted_text = process_document(document)
+                logger.info(f"Extracted text length: {len(extracted_text) if extracted_text else 0}")
+                
+                if not extracted_text or len(extracted_text.strip()) < 50:
+                    logger.warning("Extracted text is too short or empty")
+                    check.status = 'failed'
+                    check.save()
+                    return JsonResponse({
+                        'error': 'Не удалось извлечь текст из документа. Возможно, это сканированный документ или файл поврежден.'
+                    }, status=400)
+            except ValueError as e:
+                logger.error(f"ValueError during text extraction: {str(e)}")
+                check.status = 'failed'
+                check.save()
+                return JsonResponse({
+                    'error': str(e)
+                }, status=400)
+            except Exception as e:
+                logger.error(f"Unexpected error during text extraction: {str(e)}")
+                check.status = 'failed'
+                check.save()
+                return JsonResponse({
+                    'error': f'Ошибка при извлечении текста: {str(e)}'
+                }, status=400)
+                
             check.extracted_text = extracted_text
             check.save()
+            logger.info("Text successfully extracted and saved")
             
             # Предупреждение о большом размере текста
             if len(extracted_text) > 100000 and not force_analyze:
+                logger.info(f"Text is too long ({len(extracted_text)} chars), showing warning")
                 return JsonResponse({
                     'status': 'warning',
-                    'message': f'Документ содержит {len(extracted_text):,} символов (больше рекомендуемых 100,000). Текст будет сокращен для анализа.',
+                    'message': _('Документ содержит {char_count:,} символов (больше рекомендуемых 100,000). Текст будет сокращен для анализа.').format(char_count=len(extracted_text)),
                     'char_count': len(extracted_text),
                     'check_id': check.id
                 })
             
             # Отправляем текст на анализ в Gemini
+            logger.info("Starting Gemini analysis")
             analysis_result = analyze_document(extracted_text, system_instruction)
+            logger.info("Gemini analysis completed")
             
             # Проверяем на наличие ошибок в результате
             if 'error' in analysis_result:
+                logger.error(f"Error in Gemini analysis: {analysis_result.get('error')}")
                 check.status = 'failed'
                 check.save()
                 return JsonResponse({
@@ -174,6 +211,7 @@ def upload_document(request):
                 }, status=500)
                 
             # Обновляем запись в базе данных
+            logger.info("Updating check record with analysis results")
             check.set_scores(analysis_result)
             
             # Возвращаем успешный результат
@@ -192,21 +230,22 @@ def upload_document(request):
             
         except ValueError as e:
             # Ошибка обработки файла
+            logger.error(f"ValueError during document processing: {str(e)}")
             check.status = 'failed'
             check.save()
             return JsonResponse({'error': str(e)}, status=400)
             
         except Exception as e:
             # Общая ошибка
-            logger.error(f"Error processing document: {str(e)}")
+            logger.error(f"Error processing document: {str(e)}", exc_info=True)
             check.status = 'failed'
             check.save()
-            return JsonResponse({'error': 'Произошла ошибка при обработке документа'}, status=500)
+            return JsonResponse({'error': f'Произошла ошибка при обработке документа: {str(e)}'}, status=500)
             
     except Exception as e:
         # Общая ошибка
-        logger.error(f"Unexpected error: {str(e)}")
-        return JsonResponse({'error': 'Произошла непредвиденная ошибка'}, status=500)
+        logger.error(f"Unexpected error: {str(e)}", exc_info=True)
+        return JsonResponse({'error': f'Произошла непредвиденная ошибка: {str(e)}'}, status=500)
 
 @login_required
 def user_checks(request):

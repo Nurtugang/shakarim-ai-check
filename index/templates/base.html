@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -8,39 +9,111 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link id="theme-link" rel="stylesheet" href="{% static 'css/style.css' %}">
+
     <link rel="shortcut icon" href="{% static 'img/logo.png' %}" type="image/x-icon">
     
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     
 </head>
 <body class="gradient-bg min-h-screen">
-    <header class="container mx-auto px-4 py-6">
-   <div class="flex justify-between items-center">
-       <div class="flex-1"></div>
-       <div class="text-white font-bold text-2xl logo-nopulse">
-           <a href="{% url 'index' %}">
-               <img src="{% static 'img/university.png' %}" alt="Shakarim AI Check Logo" class="h-10 inline-block">
-           </a>
-       </div>
-       <nav class="flex-1 hidden md:flex justify-end space-x-6">
-           <a href="{% url 'index' %}" class="text-white hover:text-blue-300 transition">Главная</a>
-           <a href="{% url 'instructions' %}" class="text-white hover:text-blue-300 transition">Инструкция</a>
-           <a href="{% url 'contacts' %}" class="text-white hover:text-blue-300 transition">Контакты</a>
-           {% if user.is_authenticated %}
-               <a href="{% url 'dashboard' %}" class="text-white hover:text-blue-300 transition">Дашборд</a>
-               <a href="{% url 'logout' %}" class="text-white hover:text-blue-300 transition">Выйти</a>
-           {% else %}
-               <a href="{% url 'login' %}" class="text-white hover:text-blue-300 transition">Войти</a>
-           {% endif %}
-       </nav>
-       <div class="md:hidden">
-           <button class="text-white">
-               <i class="fas fa-bars text-xl"></i>
-           </button>
-       </div>
-   </div>
+    <header class="sticky top-0 z-50 gradient-bg" x-data="{ open: false }">
+    <div class="container mx-auto px-4 py-6">
+    <div class="relative flex items-center justify-center">
+
+        <!-- Кнопка меню на мобилке -->
+        <div class="absolute left-0 md:hidden">
+            <button @click="open = !open" class="text-white focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Логотип строго по центру -->
+        <div class="text-white font-bold text-2xl logo-nopulse">
+            <a href="{% url 'index' %}">
+                <img src="{% static 'img/university.png' %}" alt="Shakarim AI Check Logo" class="h-10 mx-auto">
+            </a>
+        </div>
+        <!-- Меню для десктопа -->
+        <nav class="absolute right-0 hidden md:flex space-x-6">
+            <a href="{% url 'index' %}" class="text-white hover:text-blue-300 transition">{% trans "Главная" %}</a>
+            <a href="{% url 'instructions' %}" class="text-white hover:text-blue-300 transition">{% trans "Инструкция" %}</a>
+            <a href="{% url 'contacts' %}" class="text-white hover:text-blue-300 transition">{% trans "Контакты" %}</a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'dashboard' %}" class="text-white hover:text-blue-300 transition">{% trans "Дашборд" %}</a>
+                <a href="{% url 'logout' %}" class="text-white hover:text-blue-300 transition">{% trans "Выйти" %}</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="text-white hover:text-blue-300 transition">{% trans "Войти" %}</a>
+            {% endif %}
+            <div class="relative" x-data="{ open: false }">
+                <button @click="open = !open" @click.away="open = false" class="text-white bg-transparent hover:text-blue-300 focus:outline-none transition cursor-pointer flex items-center">
+                    {% if LANGUAGE_CODE == 'ru' %}
+                        Русский
+                    {% elif LANGUAGE_CODE == 'en' %}
+                        English
+                    {% elif LANGUAGE_CODE == 'kk' %}
+                        Қазақша
+                    {% else %}
+                        {{ LANGUAGE_CODE|default:'Язык' }}
+                    {% endif %}
+                    <svg class="ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+                </button>
+                <div x-show="open" x-transition class="absolute right-0 mt-2 w-32 bg-gray-800 rounded shadow-lg z-50">
+                    <form action="{% url 'set_language' %}" method="post">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                        <button type="submit" name="language" value="ru" class="block w-full text-left px-4 py-2 text-white hover:bg-blue-600 transition {% if LANGUAGE_CODE == 'ru' %}font-bold bg-blue-900{% endif %}">Русский</button>
+                        <button type="submit" name="language" value="en" class="block w-full text-left px-4 py-2 text-white hover:bg-blue-600 transition {% if LANGUAGE_CODE == 'en' %}font-bold bg-blue-900{% endif %}">English</button>
+                        <button type="submit" name="language" value="kk" class="block w-full text-left px-4 py-2 text-white hover:bg-blue-600 transition {% if LANGUAGE_CODE == 'kk' %}font-bold bg-blue-900{% endif %}">Қазақша</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+        
+
+    </div>
+
+    <!-- Мобильное меню -->
+    <div x-show="open" class="md:hidden mt-4 bg-white rounded-lg p-4 space-y-3 shadow-lg text-black">
+        <a href="{% url 'index' %}" class="block hover:text-blue-600">{% trans "Главная" %}</a>
+        <a href="{% url 'instructions' %}" class="block hover:text-blue-600">{% trans "Инструкция" %}</a>
+        <a href="{% url 'contacts' %}" class="block hover:text-blue-600">{% trans "Контакты" %}</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'dashboard' %}" class="block hover:text-blue-600">{% trans "Дашборд" %}</a>
+            <a href="{% url 'logout' %}" class="block hover:text-blue-600">{% trans "Выйти" %}</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="block hover:text-blue-600">{% trans "Войти" %}</a>
+        {% endif %}
+        <div class="relative" x-data="{ openLang: false }">
+            <button @click="openLang = !openLang" @click.away="openLang = false"
+                class="block w-full text-left  font-semibold py-1 px-0 hover:text-blue-600 transition flex items-center">
+                {% if LANGUAGE_CODE == 'ru' %}
+                    Русский
+                {% elif LANGUAGE_CODE == 'en' %}
+                    English
+                {% elif LANGUAGE_CODE == 'kk' %}
+                    Қазақша
+                {% else %}
+                    {{ LANGUAGE_CODE|default:'Язык' }}
+                {% endif %}
+                <svg class="ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+            </button>
+            <div x-show="openLang" x-transition class="mt-1 w-full bg-white rounded-b shadow-lg z-50 border-t">
+                <form action="{% url 'set_language' %}" method="post">
+                    {% csrf_token %}
+                    <input name="next" type="hidden" value="{{ request.get_full_path }}">
+                    <button type="submit" style="padding-left: 0px;" name="language" value="ru" class="block w-full text-left px-4 py-2  hover:bg-blue-100 transition {% if LANGUAGE_CODE == 'ru' %}font-bold bg-blue-100{% endif %}">
+                        Русский
+                    </button>
+                    <button type="submit" style="padding-left: 0px;" name="language" value="en" class="block w-full text-left px-4 py-2  hover:bg-blue-100 transition {% if LANGUAGE_CODE == 'en' %}font-bold bg-blue-100{% endif %}">English</button>
+                    <button type="submit" style="padding-left: 0px;" name="language" value="kk" class="block w-full text-left px-4 py-2  hover:bg-blue-100 transition {% if LANGUAGE_CODE == 'kk' %}font-bold bg-blue-100{% endif %}">Қазақша</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
 </header>
+
     {% block main %}
     {% endblock main %}
 
@@ -49,7 +122,7 @@
         <div class=" md:flex-row justify-between items-center glass-card p-6">
             <div class="text-center text-gray-300 text-sm items-center">
                 <p>© 2025 Shakarim AI Check, Shakarim University</p>
-                <p>Разработано в рамках программы AI SANA</p>
+                <p>{% trans "Разработано в рамках программы AI SANA" %}</p>
             </div>
         </div>
     </footer>

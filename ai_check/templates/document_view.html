@@ -1,39 +1,42 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block main %}
 <main class="container mx-auto px-4 py-8">
     <div class="mb-6">
         <a href="{% url 'dashboard' %}" class="text-blue-400 hover:text-blue-300 flex items-center">
-            <i class="fas fa-arrow-left mr-2"></i> Вернуться к истории проверок
+            <i class="fas fa-arrow-left mr-2"></i> {% trans "Вернуться к истории проверок" %}
         </a>
     </div>
 
-    <h1 class="text-2xl md:text-3xl font-bold text-white mb-6">{{ check.file_name }}</h1>
+    <h1 class="text-2xl md:text-3xl font-bold text-white mb-6 break-words whitespace-normal">{{ check.file_name}}</h1>
 
     <div class="flex flex-col lg:flex-row gap-6">
         <!-- Исходный документ с выделениями -->
         <div class="lg:w-1/2">
             <div class="glass-card p-4 mb-4">
-                <h2 class="text-xl font-semibold text-white mb-2">Исходный документ</h2>
+                <h2 class="text-xl font-semibold text-white mb-2">{% trans "Исходный документ" %}</h2>
                 
                 <!-- Фильтры ошибок -->
-                <div class="flex flex-wrap gap-2 mb-4" id="error-filters">
-                    <button class="filter-btn active" data-filter="all">
-                        Все замечания
-                    </button>
-                    <button class="filter-btn" data-filter="grammar">
-                        <span class="error-indicator grammar"></span> Грамматика
-                    </button>
-                    <button class="filter-btn" data-filter="style">
-                        <span class="error-indicator style"></span> Стиль
-                    </button>
-                    <button class="filter-btn" data-filter="logic">
-                        <span class="error-indicator logic"></span> Логика
-                    </button>
-                    <button class="filter-btn" data-filter="structure">
-                        <span class="error-indicator structure"></span> Структура
-                    </button>
+                <div class="flex-wrap mb-4" id="error-filters" style="display: grid; grid-auto-flow: dense; grid-gap: 8px; width: 100%;">
+                    <div class="filter-grid-container" style="display: contents;">
+                        <button class="filter-btn active" data-filter="all" style="width: 100%; justify-content: center;">
+                            {% trans "Все замечания" %}
+                        </button>
+                        <button class="filter-btn" data-filter="grammar" style="width: 100%; justify-content: center;">
+                            <span class="error-indicator grammar"></span> {% trans "Грамматика" %}
+                        </button>
+                        <button class="filter-btn" data-filter="style" style="width: 100%; justify-content: center;">
+                            <span class="error-indicator style"></span> {% trans "Стиль" %}
+                        </button>
+                        <button class="filter-btn" data-filter="logic" style="width: 100%; justify-content: center;">
+                            <span class="error-indicator logic"></span> {% trans "Логика" %}
+                        </button>
+                        <button class="filter-btn" data-filter="structure" style="width: 100%; justify-content: center;">
+                            <span class="error-indicator structure"></span> {% trans "Структура" %}
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -47,20 +50,24 @@
         <!-- Панель анализа -->
         <div class="lg:w-1/2">
             <div class="glass-card p-4 mb-4">
-                <h2 class="text-xl font-semibold text-white mb-2">Результаты анализа</h2>
+                <h2 class="text-xl font-semibold text-white mb-2">{% trans "Результаты анализа" %}</h2>
                 
-                <div class="flex space-x-2">
-                    <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
-                        Структура: {{ check.structure_score|floatformat:1 }}%
+                <div class="flex space-x-2" id="analysis-scores-row" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <span class="px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm analysis-score-structure" style="margin-bottom: 8px;">
+                        <span class="score-label">{% trans "Структура" %}:</span>
+                        <span class="score-value">{{ check.structure_score|floatformat:1 }}%</span>
                     </span>
-                    <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
-                        Логика: {{ check.logic_score|floatformat:1 }}%
+                    <span class="px-3 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm analysis-score-logic" style="margin-bottom: 8px;">
+                        <span class="score-label">{% trans "Логика" %}:</span>
+                        <span class="score-value">{{ check.logic_score|floatformat:1 }}%</span>
                     </span>
-                    <span class="px-3 py-1 bg-yellow-500/20 text-yellow-300 rounded-full text-sm">
-                        Грамматика: {{ check.grammar_score|floatformat:1 }}%
+                    <span class="px-3 py-1 bg-yellow-500/20 text-red-300 rounded-full text-sm analysis-score-grammar" style="margin-bottom: 8px;">
+                        <span class="score-label">{% trans "Грамматика" %}:</span>
+                        <span class="score-value">{{ check.grammar_score|floatformat:1 }}%</span>
                     </span>
-                    <span class="px-3 py-1 bg-orange-500/20 text-orange-300 rounded-full text-sm">
-                        Оригинальность: {{ check.originality_score|floatformat:1 }}%
+                    <span class="px-3 py-1 bg-orange-500/20 text-yellow-300 rounded-full text-sm analysis-score-originality" style="margin-bottom: 8px;">
+                        <span class="score-label">{% trans "Оригинальность" %}:</span>
+                        <span class="score-value">{{ check.originality_score|floatformat:1 }}%</span>
                     </span>
                 </div>
             </div>
@@ -71,17 +78,17 @@
                         <ul class="flex flex-wrap -mb-px">
                             <li class="mr-2">
                                 <button @click="activeTab = 'errors'" :class="{'text-blue-400 border-b-2 border-blue-400': activeTab === 'errors', 'text-gray-400 hover:text-gray-300': activeTab !== 'errors'}" class="inline-block py-2 px-4 font-medium">
-                                    Найденные замечания
+                                    {% trans "Найденные замечания" %}
                                 </button>
                             </li>
                             <li class="mr-2">
                                 <button @click="activeTab = 'analysis'" :class="{'text-blue-400 border-b-2 border-blue-400': activeTab === 'analysis', 'text-gray-400 hover:text-gray-300': activeTab !== 'analysis'}" class="inline-block py-2 px-4 font-medium">
-                                    Анализ
+                                    {% trans "Анализ" %}
                                 </button>
                             </li>
                             <li class="mr-2">
                                 <button @click="activeTab = 'recommendations'" :class="{'text-blue-400 border-b-2 border-blue-400': activeTab === 'recommendations', 'text-gray-400 hover:text-gray-300': activeTab !== 'recommendations'}" class="inline-block py-2 px-4 font-medium">
-                                    Рекомендации
+                                    {% trans "Рекомендации" %}
                                 </button>
                             </li>
                         </ul>
@@ -91,26 +98,26 @@
                     <div x-show="activeTab === 'errors'" class="text-white space-y-4" id="errors-panel">
                         <div class="text-center py-8 text-gray-400" id="no-errors-message">
                             <i class="fas fa-search text-2xl mb-2"></i>
-                            <p>Кликните на выделенный фрагмент в тексте, чтобы увидеть детали замечания</p>
+                            <p>{% trans "Кликните на выделенный фрагмент в тексте, чтобы увидеть детали замечания" %}</p>
                         </div>
                         
                         <!-- Детали выбранной ошибки -->
                         <div id="error-details" class="hidden">
                             <div class="glass-card p-4 mb-4">
-                                <h4 class="font-semibold mb-2 text-white">Выбранное замечание:</h4>
+                                <h4 class="font-semibold mb-2 text-white">{% trans "Выбранное замечание" %}:</h4>
                                 <div class="bg-gray-800 p-3 rounded mb-3">
-                                    <p class="text-gray-300 italic" id="error-quote">Анализируемый фрагмент</p>
+                                    <p class="text-gray-300 italic" id="error-quote">{% trans "Анализируемый фрагмент" %}</p>
                                 </div>
                                 <div class="space-y-2">
                                     <div class="flex items-center space-x-2">
                                         <span class="error-indicator" id="error-type-indicator"></span>
-                                        <span class="text-sm font-medium" id="error-type-text">Тип замечания</span>
-                                        <span class="px-2 py-1 rounded text-xs" id="error-severity">Приоритет</span>
+                                        <span class="text-sm font-medium" id="error-type-text">{% trans "Тип замечания" %}</span>
+                                        <span class="px-2 py-1 rounded text-xs" id="error-severity">{% trans "Приоритет" %}</span>
                                     </div>
-                                    <p class="text-gray-300" id="error-description">Описание замечания</p>
+                                    <p class="text-gray-300" id="error-description">{% trans "Описание замечания" %}</p>
                                     <div class="bg-blue-900/20 border border-blue-500/30 rounded p-3 mt-3">
-                                        <h5 class="text-blue-400 font-medium mb-1">Рекомендация по улучшению:</h5>
-                                        <p class="text-blue-300" id="error-suggestion">Как улучшить</p>
+                                        <h5 class="text-blue-400 font-medium mb-1">{% trans "Рекомендация по улучшению" %}:</h5>
+                                        <p class="text-blue-300" id="error-suggestion">{% trans "Как улучшить" %}</p>
                                     </div>
                                 </div>
                             </div>
@@ -118,7 +125,7 @@
                         
                         <!-- Список всех ошибок -->
                         <div id="errors-list">
-                            <h4 class="font-semibold mb-3 text-white">Все найденные замечания:</h4>
+                            <h4 class="font-semibold mb-3 text-white">{% trans "Все найденные замечания" %}:</h4>
                             <div class="space-y-2" id="errors-container">
                                 <!-- Ошибки будут загружены через JavaScript -->
                             </div>
@@ -128,28 +135,28 @@
                     <!-- Анализ -->
                     <div x-show="activeTab === 'analysis'" class="text-white space-y-6">
                         <div>
-                            <h3 class="text-lg font-semibold mb-2 text-green-400">Структура</h3>
+                            <h3 class="text-lg font-semibold mb-2 text-green-400">{% trans "Структура" %}</h3>
                             <div class="text-gray-300">
                                 {{ structure_analysis|linebreaks }}
                             </div>
                         </div>
                         
                         <div>
-                            <h3 class="text-lg font-semibold mb-2 text-purple-400">Логика изложения</h3>
+                            <h3 class="text-lg font-semibold mb-2 text-purple-400">{% trans "Логика изложения" %}</h3>
                             <div class="text-gray-300">
                                 {{ logic_analysis|linebreaks }}
                             </div>
                         </div>
                         
                         <div>
-                            <h3 class="text-lg font-semibold mb-2 text-yellow-400">Грамматика и стиль</h3>
+                            <h3 class="text-lg font-semibold mb-2 text-yellow-400">{% trans "Грамматика и стиль" %}</h3>
                             <div class="text-gray-300">
                                 {{ grammar_analysis|linebreaks }}
                             </div>
                         </div>
                         
                         <div>
-                            <h3 class="text-lg font-semibold mb-2 text-orange-400">Оригинальность</h3>
+                            <h3 class="text-lg font-semibold mb-2 text-orange-400">{% trans "Оригинальность" %}</h3>
                             <div class="text-gray-300">
                                 {{ originality_analysis|linebreaks }}
                             </div>
@@ -159,56 +166,56 @@
                     <!-- Рекомендации -->
                     <div x-show="activeTab === 'recommendations'" class="text-white space-y-6">
                         <div>
-                            <h3 class="text-lg font-semibold mb-2 text-blue-400">Общие рекомендации</h3>
+                            <h3 class="text-lg font-semibold mb-2 text-blue-400">{% trans "Общие рекомендации" %}</h3>
                             <ul class="list-disc pl-5 space-y-1 text-gray-300">
                                 {% for item in general_recommendations %}
                                     <li>{{ item }}</li>
                                 {% empty %}
-                                    <li class="text-gray-500">Информация не найдена</li>
+                                    <li class="text-gray-500">{% trans "Информация не найдена" %}</li>
                                 {% endfor %}
                             </ul>
                         </div>
                         
                         <div>
-                            <h3 class="text-lg font-semibold mb-2 text-green-400">Рекомендации по структуре</h3>
+                            <h3 class="text-lg font-semibold mb-2 text-green-400">{% trans "Рекомендации по структуре" %}</h3>
                             <ul class="list-disc pl-5 space-y-1 text-gray-300">
                                 {% for item in structure_recommendations %}
                                     <li>{{ item }}</li>
                                 {% empty %}
-                                    <li class="text-gray-500">Информация не найдена</li>
+                                    <li class="text-gray-500">{% trans "Информация не найдена" %}</li>
                                 {% endfor %}
                             </ul>
                         </div>
                         
                         <div>
-                            <h3 class="text-lg font-semibold mb-2 text-purple-400">Рекомендации по логике</h3>
+                            <h3 class="text-lg font-semibold mb-2 text-purple-400">{% trans "Рекомендации по логике" %}</h3>
                             <ul class="list-disc pl-5 space-y-1 text-gray-300">
                                 {% for item in logic_recommendations %}
                                     <li>{{ item }}</li>
                                 {% empty %}
-                                    <li class="text-gray-500">Информация не найдена</li>
+                                    <li class="text-gray-500">{% trans "Информация не найдена" %}</li>
                                 {% endfor %}
                             </ul>
                         </div>
                         
                         <div>
-                            <h3 class="text-lg font-semibold mb-2 text-yellow-400">Рекомендации по грамматике</h3>
+                            <h3 class="text-lg font-semibold mb-2 text-yellow-400">{% trans "Рекомендации по грамматике" %}</h3>
                             <ul class="list-disc pl-5 space-y-1 text-gray-300">
                                 {% for item in grammar_recommendations %}
                                     <li>{{ item }}</li>
                                 {% empty %}
-                                    <li class="text-gray-500">Информация не найдена</li>
+                                    <li class="text-gray-500">{% trans "Информация не найдена" %}</li>
                                 {% endfor %}
                             </ul>
                         </div>
                         
                         <div>
-                            <h3 class="text-lg font-semibold mb-2 text-orange-400">Рекомендации по оригинальности</h3>
+                            <h3 class="text-lg font-semibold mb-2 text-orange-400">{% trans "Рекомендации по оригинальности" %}</h3>
                             <ul class="list-disc pl-5 space-y-1 text-gray-300">
                                 {% for item in originality_recommendations %}
                                     <li>{{ item }}</li>
                                 {% empty %}
-                                    <li class="text-gray-500">Информация не найдена</li>
+                                    <li class="text-gray-500">{% trans "Информация не найдена" %}</li>
                                 {% endfor %}
                             </ul>
                         </div>
@@ -288,8 +295,8 @@
 
 /* Кнопки фильтров */
 .filter-btn {
-    padding: 6px 12px;
-    border-radius: 6px;
+    padding: 8px 12px;
+    border-radius: 8px;
     background-color: rgba(55, 65, 81, 0.5);
     color: #9ca3af;
     border: 1px solid rgba(75, 85, 99, 0.5);
@@ -298,6 +305,32 @@
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+/* Добавляем стили для адаптивной сетки кнопок фильтра */
+#error-filters {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+/* Медиа-запросы для управления количеством кнопок в ряду */
+@media (max-width: 1200px) {
+    #error-filters {
+        grid-template-columns: repeat(3, 1fr); 
+    }
+}
+
+@media (max-width: 768px) {
+    #error-filters {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    #error-filters {
+        grid-template-columns: 1fr;
+    }
 }
 
 .filter-btn:hover {
@@ -335,6 +368,47 @@
 .severity-high { background-color: #dc2626; color: white; }
 .severity-medium { background-color: #d97706; color: white; }
 .severity-low { background-color: #16a34a; color: white; }
+
+.analysis-score-structure,
+.analysis-score-logic,
+.analysis-score-grammar,
+.analysis-score-originality {
+    margin: 0 0 8px 0 !important;
+}
+#analysis-scores-row span:first-child {
+    margin-left: 0 !important;
+}
+@media (max-width: 640px) {
+    #analysis-scores-row {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+    }
+    #analysis-scores-row .score-label {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 2px;
+    }
+    #analysis-scores-row .score-value {
+        display: block;
+        width: 100%;
+        text-align: center;
+        font-size: 1.1em;
+        font-weight: bold;
+        margin-top: 0;
+    }
+}
+@media (min-width: 641px) {
+    #analysis-scores-row .score-label, #analysis-scores-row .score-value {
+        display: inline;
+        width: auto;
+        text-align: left;
+        font-size: inherit;
+        font-weight: normal;
+        margin: 0;
+    }
+}
 </style>
 
 <!-- Безопасная передача данных через Django json_script -->
@@ -401,7 +475,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const errorsContainer = document.getElementById('errors-container');
         
         if (!errorsData || errorsData.length === 0) {
-            errorsContainer.innerHTML = '<p class="text-gray-400">Замечания не найдены</p>';
+            errorsContainer.innerHTML = '<p class="text-gray-400">{% trans "Замечания не найдены" %}</p>';
             return;
         }
         
@@ -425,8 +499,8 @@ document.addEventListener('DOMContentLoaded', function() {
             'structure': 'Структура',
         }[error.error_type] || error.error_type;
         
-        const quote = error.quote || 'Цитата не найдена';
-        const description = error.description || 'Описание отсутствует';
+        const quote = error.quote || '{% trans "Цитата не найдена" %}';
+        const description = error.description || '{% trans "Описание отсутствует" %}';
         const severity = error.severity || 'medium';
         
         card.innerHTML = `
@@ -495,20 +569,20 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('error-type-indicator').className = `error-indicator ${error.error_type}`;
         
         const typeText = {
-            'grammar': 'Грамматическое замечание',
-            'style': 'Стилистическое замечание', 
-            'logic': 'Замечание по логике',
-            'structure': 'Структурное замечание',
-            'originality': 'Замечание по оригинальности'
+            'grammar': '{% trans "Грамматическое замечание" %}',
+            'style': '{% trans "Стилистическое замечание" %}', 
+            'logic': '{% trans "Замечание по логике" %}',
+            'structure': '{% trans "Структурное замечание" %}',
+            'originality': '{% trans "Замечание по оригинальности" %}'
         }[error.error_type] || error.error_type;
         
         document.getElementById('error-type-text').textContent = typeText;
         
         const severityElement = document.getElementById('error-severity');
         const severityText = {
-            'high': 'Высокая',
-            'medium': 'Средняя',
-            'low': 'Низкая'
+            'high': '{% trans "Высокая" %}',
+            'medium': '{% trans "Средняя" %}',
+            'low': '{% trans "Низкая" %}'
         }[error.severity] || error.severity;
         
         severityElement.textContent = severityText;

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block main %}
 <main class="container mx-auto px-4 py-12">
@@ -8,7 +9,7 @@
             {% if form_type == 'register' %}
                 {% if api_registration %}
                     <!-- Информация о том, что регистрация через API -->
-                    <h2 class="text-2xl font-bold mb-6 text-center">Регистрация не требуется</h2>
+                    <h2 class="text-2xl font-bold mb-6 text-center">{% trans "Регистрация не требуется" %}</h2>
                     
                     <div class="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4 mb-6">
                         <div class="flex items-center mb-3">
@@ -16,34 +17,34 @@
                             <span class="font-semibold text-blue-400">Информация</span>
                         </div>
                         <p class="text-gray-300 text-sm">
-                            Используйте свои учетные данные из университетской системы для входа. 
-                            Регистрация происходит автоматически при первом входе.
+                            {% trans "Используйте свои учетные данные из университетской системы для входа." %}
+                            {% trans "Регистрация происходит автоматически при первом входе." %}
                         </p>
                     </div>
                     
                     <div class="space-y-4 mb-6">
                         <div class="flex items-center text-gray-300">
                             <i class="fas fa-user-graduate text-blue-400 mr-3"></i>
-                            <span class="text-sm">Студенты: используйте свой студенческий ID</span>
+                            <span class="text-sm">{% trans "Студенты: используйте свой студенческий ID" %}</span>
                         </div>
                         <div class="flex items-center text-gray-300">
                             <i class="fas fa-chalkboard-teacher text-blue-400 mr-3"></i>
-                            <span class="text-sm">Преподаватели: используйте свой преподавательский ID</span>
+                            <span class="text-sm">{% trans "Преподаватели: используйте свой преподавательский ID" %}</span>
                         </div>
                         <div class="flex items-center text-gray-300">
                             <i class="fas fa-shield-alt text-blue-400 mr-3"></i>
-                            <span class="text-sm">Безопасность: данные синхронизируются с университетской системой</span>
+                            <span class="text-sm">{% trans "Безопасность: данные синхронизируются с университетской системой" %}</span>
                         </div>
                     </div>
                     
                     <a href="{% url 'login' %}" class="w-full btn-gradient py-3 rounded-lg text-white font-semibold shadow-lg block text-center">
-                        Перейти к авторизации
+                        {% trans "Перейти к авторизации" %}
                     </a>
                 {% else %}
-                    <h2 class="text-2xl font-bold mb-6 text-center">Регистрация</h2>
+                    <h2 class="text-2xl font-bold mb-6 text-center">{% trans "Регистрация" %}</h2>
                 {% endif %}
             {% else %}
-                <h2 class="text-2xl font-bold mb-6 text-center">Авторизация</h2>
+                <h2 class="text-2xl font-bold mb-6 text-center">{% trans "Авторизация" %}</h2>
             {% endif %}
             
             <!-- Контейнер для сообщений с автоскрытием -->
@@ -87,7 +88,7 @@
                         </div>
                         
                         <div>
-                            <label class="block text-gray-300 mb-2" for="last_name">Фамилия</label>
+                            <label class="block text-gray-300 mb-2" for="last_name">{% trans "Фамилия" %}</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-user text-gray-400"></i>
@@ -100,9 +101,9 @@
                     <div>
                         <label class="block text-gray-300 mb-2" for="username">
                             {% if form_type == 'login' %}
-                                Университетский ID
+                                {% trans "Университетский ID" %}
                             {% else %}
-                                Имя пользователя
+                                {% trans "Имя пользователя" %}
                             {% endif %}
                         </label>
                         <div class="relative">
@@ -111,17 +112,17 @@
                             </div>
                             <input type="text" id="username" name="username" 
                                    class="w-full py-3 pl-10 pr-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                                   placeholder="{% if form_type == 'login' %}Введите ваш ID{% else %}Ваш логин{% endif %}" 
+                                   placeholder="{% if form_type == 'login' %}{% trans "Введите ваш ID" %}{% else %}Ваш логин{% endif %}" 
                                    autocomplete="username" required>
                         </div>
                         {% if form_type == 'login' %}
-                            <p class="text-xs text-gray-400 mt-1">Используйте ваш студенческий или преподавательский ID</p>
+                            <p class="text-xs text-gray-400 mt-1">{% trans "Используйте ваш студенческий или преподавательский ID" %}</p>
                         {% endif %}
                     </div>
                     
                     {% if form_type == 'register' and not api_registration %}
                         <div>
-                            <label class="block text-gray-300 mb-2" for="email">Электронная почта</label>
+                            <label class="block text-gray-300 mb-2" for="email">{% trans "Электронная почта" %}</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-envelope text-gray-400"></i>
@@ -132,7 +133,7 @@
                     {% endif %}
                     
                     <div>
-                        <label class="block text-gray-300 mb-2" for="password">Пароль</label>
+                        <label class="block text-gray-300 mb-2" for="password">{% trans "Пароль" %}</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="fas fa-lock text-gray-400"></i>
@@ -148,7 +149,7 @@
                     
                     {% if form_type == 'register' and not api_registration %}
                         <div>
-                            <label class="block text-gray-300 mb-2" for="password2">Подтверждение пароля</label>
+                            <label class="block text-gray-300 mb-2" for="password2">{% trans "Подтверждение пароля" %}</label>
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                     <i class="fas fa-lock text-gray-400"></i>
@@ -165,17 +166,17 @@
                         <div class="flex items-center justify-between mt-4">
                             <div class="flex items-center">
                                 <input type="checkbox" id="remember" name="remember" class="rounded bg-gray-800 border-gray-500 text-blue-500 focus:ring-blue-500">
-                                <label for="remember" class="ml-2 text-sm text-gray-300">Запомнить меня</label>
+                                <label for="remember" class="ml-2 text-sm text-gray-300">{% trans "Запомнить меня" %}</label>
                             </div>
-                            <a href="{% url 'contacts' %}" class="text-sm text-blue-400 hover:underline">Забыли пароль?</a>
+                            <a href="{% url 'contacts' %}" class="text-sm text-blue-400 hover:underline">{% trans "Забыли пароль" %}?</a>
                         </div>
                     {% endif %}
                     
                     <button type="submit" class="w-full btn-gradient py-3 rounded-lg text-white font-semibold shadow-lg mt-6">
                         {% if form_type == 'register' %}
-                            Зарегистрироваться
+                            {% trans "Зарегистрироваться" %}
                         {% else %}
-                            Войти
+                            {% trans "Войти" %}
                         {% endif %}
                     </button>
                 </form>
@@ -184,12 +185,12 @@
             <div class="mt-6 text-center text-gray-300 text-sm">
                 {% if form_type == 'register' %}
                     {% if api_registration %}
-                        <p>Уже авторизованы? <a href="{% url 'login' %}" class="text-blue-400 hover:underline">Войти</a></p>
+                        <p>{% trans "Уже авторизованы" %}? <a href="{% url 'login' %}" class="text-blue-400 hover:underline">{% trans "Войти" %}</a></p>
                     {% else %}
-                        <p>Уже есть аккаунт? <a href="{% url 'login' %}" class="text-blue-400 hover:underline">Войти</a></p>
+                        <p>{% trans "Уже есть аккаунт" %}? <a href="{% url 'login' %}" class="text-blue-400 hover:underline">{% trans "Войти" %}</a></p>
                     {% endif %}
                 {% else %}
-                    <p>Вопросы по входу? <a href="{% url 'contacts' %}" class="text-blue-400 hover:underline">Связаться с поддержкой</a></p>
+                    <p>{% trans "Вопросы по входу" %}? <a href="{% url 'contacts' %}" class="text-blue-400 hover:underline">{% trans "Связаться с поддержкой" %}</a></p>
                 {% endif %}
             </div>
         </div>
@@ -200,12 +201,12 @@
                     <i class="fas fa-info"></i>
                 </div>
                 <div>
-                    <h3 class="font-semibold mb-1">Нужна помощь?</h3>
+                    <h3 class="font-semibold mb-1">{% trans "Нужна помощь" %}?</h3>
                     <p class="text-sm text-gray-300">
                         {% if form_type == 'login' %}
-                            Если у вас проблемы со входом, обратитесь в IT отдел университета
+                            {% trans "Если у вас проблемы со входом, обратитесь в IT отдел университета" %}
                         {% else %}
-                            Свяжитесь с администратором или обратитесь в техническую поддержку
+                            {% trans "Свяжитесь с администратором или обратитесь в техническую поддержку" %}
                         {% endif %}
                     </p>
                 </div>

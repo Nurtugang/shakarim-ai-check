@@ -1,0 +1,600 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-27 12:50+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: index/templates/base.html:38 index/templates/base.html:56
+msgid "Главная"
+msgstr "Home"
+
+msgid "Инструкция"
+msgstr "Instructions"
+
+msgid "Контакты"
+msgstr "Contacts"
+
+msgid "Дашборд"
+msgstr "Dashboard"
+
+msgid "Выйти"
+msgstr "Logout"
+
+msgid "Войти"
+msgstr "Login"
+
+msgid "Тема"
+msgstr "Topic"
+
+msgid "Разработано в рамках программы AI SANA"
+msgstr "Developed under the AI SANA program"
+
+#: index/templates/auth.html:11 index/templates/auth.html:208
+msgid "Регистрация не требуется"
+msgstr "No registration required"
+
+msgid "Информация"
+msgstr "Information"
+
+msgid "Используйте свои учетные данные из университетской системы для входа."
+msgstr "Use your university system credentials to log in."
+
+msgid "Регистрация происходит автоматически при первом входе."
+msgstr "Registration occurs automatically upon first login."
+
+msgid "Студенты: используйте свой студенческий ID"
+msgstr "Students: Use your student ID"
+
+msgid "Преподаватели: используйте свой преподавательский ID"
+msgstr "Teachers: Use your teacher ID"
+
+msgid "Безопасность: данные синхронизируются с университетской системой"
+msgstr "Security: data is synchronized with the university system"
+
+msgid "Перейти к авторизации"
+msgstr "Proceed to authorization"
+
+msgid "Регистрация"
+msgstr "Registration"
+
+msgid "Авторизация"
+msgstr "Authorization"
+
+msgid "Фамилия"
+msgstr "Surname"
+
+msgid "Университетский ID"
+msgstr "University ID"
+
+msgid "Имя пользователя"
+msgstr "Username"
+
+msgid "Ваш логин"
+msgstr "Your login"
+
+msgid "Используйте ваш студенческий или преподавательский ID"
+msgstr "Use your student or teacher ID"
+
+msgid "Электронная почта"
+msgstr "E-mail"
+
+msgid "Пароль"
+msgstr "Password"
+
+msgid "Подтверждение пароля"
+msgstr "Confirm password"
+
+msgid "Запомнить меня"
+msgstr "Remember me"
+
+msgid "Забыли пароль"
+msgstr "Forgot your password"
+
+msgid "Зарегистрироваться"
+msgstr "Register"
+
+msgid "Уже авторизованы"
+msgstr "Already logged in"
+
+msgid "Уже есть аккаунт"
+msgstr "Already have an account"
+
+msgid "Вопросы по входу"
+msgstr "Questions about logging in"
+
+msgid "Связаться с поддержкой"
+msgstr "Contact support"
+
+msgid "Нужна помощь"
+msgstr "Need help"
+
+msgid "Если у вас проблемы со входом, обратитесь в IT отдел университета"
+msgstr "If you have problems logging in, please contact the university's IT department"
+
+msgid "Свяжитесь с администратором или обратитесь в техническую поддержку"
+msgstr "Contact the administrator or contact technical support"
+
+#: index/templates/contacts.html:7 index/templates/contacts.html:96
+msgid "Контактная информация"
+msgstr "Contact information"
+
+msgid "Адрес"
+msgstr "Address"
+
+msgid "г. Семей, область Абай"
+msgstr "Semey city, Abay region"
+
+msgid "Республика Казахстан"
+msgstr "Republic of Kazakhstan"
+
+msgid "Телефон"
+msgstr "Telephone"
+
+msgid "Мы на карте"
+msgstr "We are on the map"
+
+msgid "Мы в социальных сетях"
+msgstr "We are on social networks"
+
+msgid "Свяжитесь с нами"
+msgstr "Contact us"
+
+msgid "Ваше имя"
+msgstr "Your name"
+
+msgid "Сообщение"
+msgstr "Message"
+
+msgid "Отправить"
+msgstr "Send"
+
+#: index/templates/index.html:9 index/templates/index.html:283
+msgid "Интеллектуальная проверка студенческих работ"
+msgstr "Intelligent checking of students' work"
+
+msgid "Проект Shakarim AI Check от Shakarim University позволяет автоматически анализировать качество студенческих работ с помощью искусственного интеллекта."
+msgstr "The Shakarim AI Check project from Shakarim University allows for automatic analysis of the quality of student work using artificial intelligence."
+
+msgid "Об AI SANA"
+msgstr "About AI SANA"
+
+msgid "Проект разработан в рамках инновационной программы AI SANA, направленной на внедрение передовых технологий искусственного интеллекта в образовательный процесс."
+msgstr "The project was developed within the framework of the innovative AI SANA program, aimed at introducing advanced artificial intelligence technologies into the educational process."
+
+msgid "ИИ-анализ"
+msgstr "AI Analysis"
+
+msgid "Автоматическая оценка структуры, логики, грамматики и оригинальности работ"
+msgstr "Automatic assessment of structure, logic, grammar and originality of works"
+
+msgid "Детальный отчет"
+msgstr "Detailed report"
+
+msgid "Подробный анализ по каждому критерию с рекомендациями"
+msgstr "Detailed analysis for each criterion with recommendations"
+
+msgid "История проверок"
+msgstr "History of checks"
+
+msgid "Отслеживайте прогресс и храните результаты всех проверок"
+msgstr "Track progress and store results of all checks"
+
+msgid "Поддержка файлов"
+msgstr "File support"
+
+msgid "Работа с файлами PDF и Word без потери форматирования"
+msgstr "Work with PDF and Word files without losing formatting"
+
+msgid "Добро пожаловать"
+msgstr "Welcome"
+
+msgid "Авторизация через ИС Platonus"
+msgstr "Authorization via Platonus IS"
+
+msgid "Локальный аккаунт"
+msgstr "Local account"
+
+msgid "Локальный вход"
+msgstr "Local login"
+
+msgid "Проверок"
+msgstr "Checks"
+
+msgid "Средний балл"
+msgstr "Average score"
+
+msgid "Перейти к проверкам"
+msgstr "Go to checks"
+
+msgid "Последняя проверка"
+msgstr "Last check"
+
+msgid "Программа AI-SANA"
+msgstr "AI-SANA Program"
+
+msgid "Министерство науки и высшего образования представило инновационную программу AI-SANA по искусственному интеллекту"
+msgstr "The Ministry of Science and Higher Education presented the innovative AI-SANA program on artificial intelligence"
+
+msgid "Через Platonus"
+msgstr "Via Platonus"
+
+msgid "Вход через ИС Platonus"
+msgstr "Login via IS Platonus"
+
+msgid "Используйте ваши учетные данные из университетской системы"
+msgstr "Use your credentials from the university system"
+
+msgid "Введите ваш ID"
+msgstr "Enter your ID"
+
+msgid "Студенческий или преподавательский ID"
+msgstr "Student or teacher ID"
+
+msgid "Войти через Platonus"
+msgstr "Login via Platonus"
+
+msgid "Автоматическая регистрация при первом входе"
+msgstr "Automatic registration on first login"
+
+msgid "Для администраторов и зарегистрированных пользователей"
+msgstr "For administrators and registered users"
+
+msgid "Логин"
+msgstr "Login"
+
+msgid "Войти локально"
+msgstr "Login locally"
+
+msgid "Нет аккаунта"
+msgstr "Don't have an account"
+
+msgid "Обратитесь в IT отдел университета если у вас проблемы со входом"
+msgstr "Contact the university IT department if you have problems logging in"
+
+#: index/templates/instructions.html:8 index/templates/instructions.html:138
+msgid "Инструкция по использованию"
+msgstr "Instructions for use"
+
+msgid "Добро пожаловать в систему интеллектуальной проверки студенческих работ"
+msgstr "Welcome to the intelligent student work checking system"
+
+msgid "Shakarim AI Check использует технологии искусственного интеллекта Google Gemini для анализа академических работ и предоставляет детальный отчет по структуре, логике, грамматике и оригинальности текста."
+msgstr "Shakarim AI Check uses Google Gemini artificial intelligence technology to analyze academic papers and provides a detailed report on the structure, logic, grammar and originality of the text."
+
+msgid "Процесс работы с системой"
+msgstr "The process of working with the system"
+
+msgid "Войдите в систему, используя ваши учетные данные. Если у вас еще нет аккаунта, пройдите регистрацию."
+msgstr "Log in using your credentials. If you don't have an account yet, register."
+
+msgid "Загрузка работы"
+msgstr "Uploading work"
+
+msgid "Загрузите документ в формате PDF или DOCX, нажав на кнопку «Загрузить документ» на странице дашборда."
+msgstr "Upload your document in PDF or DOCX format by clicking the «Upload Document» button on the dashboard page."
+
+msgid "Анализ результатов"
+msgstr "Analysis of results"
+
+msgid "Изучите результаты анализа, сильные и слабые стороны работы, а также рекомендации по улучшению."
+msgstr "Review the analysis results, strengths and weaknesses of the work, and recommendations for improvement."
+
+msgid "Описание интерфейса"
+msgstr "Interface Description"
+
+msgid "На странице дашборда вы можете увидеть историю всех ваших проверок. Для каждой проверки отображается:"
+msgstr "On the dashboard page you can see the history of all your checks. For each check you can see:"
+
+msgid "Название файла"
+msgstr "File name"
+
+msgid "Дата проверки"
+msgstr "Date of verification"
+
+msgid "Статус обработки"
+msgstr "Processing status"
+
+msgid "Общая оценка"
+msgstr "Overall rating"
+
+msgid "Кнопки для просмотра результатов и удаления проверки"
+msgstr "Buttons for viewing results and deleting the test"
+
+msgid "Просмотр документа"
+msgstr "View document"
+
+msgid "При просмотре документа вы увидите"
+msgstr "When you view the document you will see"
+
+msgid "Исходный текст документа"
+msgstr "Original text of the document"
+
+msgid "Результаты анализа с оценками по категориям"
+msgstr "Analysis results with ratings by category"
+
+msgid "Вкладки с детальным анализом, сильными и слабыми сторонами, рекомендациями"
+msgstr "Tabs with detailed analysis, strengths and weaknesses, recommendations"
+
+msgid "Детальный анализ"
+msgstr "Detailed analysis"
+
+msgid "Страница детального анализа содержит"
+msgstr "The detailed analysis page contains"
+
+msgid "Круговые диаграммы с оценками по категориям"
+msgstr "Pie charts with ratings by category"
+
+msgid "Подробный анализ структуры, логики, грамматики и оригинальности"
+msgstr "Detailed analysis of structure, logic, grammar and originality"
+
+msgid "Конкретные рекомендации по улучшению работы"
+msgstr "Specific recommendations for improving performance"
+
+msgid "Критерии оценки"
+msgstr "Evaluation criteria"
+
+msgid "Структура"
+msgstr "Structure"
+
+msgid "Оценивается наличие и качество всех необходимых элементов, оформление работы, структурированность текста, баланс частей работы."
+msgstr "The presence and quality of all necessary elements, the design of the work, the structuring of the text, and the balance of the parts of the work are assessed."
+
+msgid "Логика"
+msgstr "Logics"
+
+msgid "Оценивается последовательность и связность аргументации, соответствие содержания теме, полнота раскрытия темы, качество аргументации."
+msgstr "The consistency and coherence of the argumentation, the relevance of the content to the topic, the completeness of the topic’s disclosure, and the quality of the argumentation are assessed."
+
+msgid "Грамматика"
+msgstr "Grammar"
+
+msgid "Оценивается орфографическая и пунктуационная грамотность, синтаксическая корректность, соответствие научному стилю, точность формулировок."
+msgstr "Spelling and punctuation literacy, syntactic correctness, compliance with scientific style, and accuracy of formulations are assessed."
+
+msgid "Оригинальность"
+msgstr "Originality"
+
+msgid "Оценивается уникальность текста, наличие собственных идей и суждений, критический анализ источников, творческий подход к решению задач."
+msgstr "The uniqueness of the text, the presence of one’s own ideas and opinions, critical analysis of sources, and creative approach to solving problems are assessed."
+
+msgid "Дополнительная информация"
+msgstr "Additional information"
+
+msgid "Система поддерживает документы в форматах PDF и DOCX размером до 10 МБ."
+msgstr "The system supports documents in PDF and DOCX formats up to 10 MB in size."
+
+msgid "Анализ документа может занять от нескольких секунд до нескольких минут в зависимости от размера файла."
+msgstr "Document analysis may take from a few seconds to a few minutes depending on the file size."
+
+msgid "Все загруженные документы хранятся в системе и доступны в истории проверок."
+msgstr "All uploaded documents are stored in the system and are available in the audit history."
+
+msgid "Вы можете удалить проверку и все связанные с ней данные в любое время."
+msgstr "You can delete a check and all associated data at any time."
+
+msgid "Для получения наилучших результатов рекомендуется загружать документы без сложного форматирования."
+msgstr "For best results, it is recommended to upload documents without complex formatting."
+
+msgid "Вернуться к истории проверок"
+msgstr "Return to check history"
+
+msgid "Общий результат проверки"
+msgstr "Overall test result"
+
+#: ai_check/templates/check_detail.html:91 ai_check/templates/check_detail.html:213
+msgid "Рекомендации"
+msgstr "Recommendations"
+
+msgid "Информация не найдена"
+msgstr "Information not found"
+
+msgid "Слабые стороны"
+msgstr "Weaknesses"
+
+msgid "Сильные стороны"
+msgstr "Strengths"
+
+msgid "Общие рекомендации"
+msgstr "General recommendations"
+
+msgid "Рекомендации по структуре"
+msgstr "Recommendations for structure"
+
+msgid "Рекомендации по логике"
+msgstr "Recommendations on logic"
+
+msgid "Рекомендации по грамматике"
+msgstr "Recommendations on grammar"
+
+msgid "Рекомендации по оригинальности"
+msgstr "Recommendations for originality"
+
+#: ai_check/templates/dashboard.html:10 ai_check/templates/dashboard.html:136
+msgid "Загрузить документ"
+msgstr "Upload document"
+
+msgid "Загрузить документ на проверку"
+msgstr "Upload document for verification"
+
+msgid "Выберите файл (PDF или DOCX)"
+msgstr "Select file (PDF or DOCX)"
+
+msgid "Максимальный размер файла: 5 MB. Рекомендуемый объем: до 50 страниц (~120,000 символов)."
+msgstr "Maximum file size: 5 MB. Recommended size: up to 50 pages (~120,000 characters)."
+
+msgid "Дополнительные инструкции (необязательно)"
+msgstr "Additional instructions (optional)"
+
+msgid "Укажите специфичные требования для проверки (опционально)"
+msgstr "Specify specific requirements for verification (optional)"
+
+msgid "Отмена"
+msgstr "Cancel"
+
+msgid "Проверить"
+msgstr "Check"
+
+msgid "Анализ документа"
+msgstr "Document analysis"
+
+msgid "Это может занять несколько минут в зависимости от размера документа"
+msgstr "This may take several minutes depending on the size of the document."
+
+msgid "Замечания"
+msgstr "Notes"
+
+msgid "Действия"
+msgstr "Actions"
+
+msgid "В обработке"
+msgstr "In processing"
+
+msgid "Завершено"
+msgstr "Completed"
+
+msgid "Ошибка"
+msgstr "Error"
+
+msgid "Подробный анализ"
+msgstr "Detailed analysis"
+
+msgid "Удалить"
+msgstr "Delete"
+
+msgid "У вас пока нет проверенных документов"
+msgstr "You don't have verified documents yet."
+
+msgid "Загрузите документ для анализа, используя кнопку выше"
+msgstr "Upload a document for analysis using the button above"
+
+msgid "Пожалуйста, выберите файл для загрузки"
+msgstr "Please select a file to upload"
+
+msgid "Произошла ошибка при загрузке файла"
+msgstr "There was an error loading the file"
+
+msgid "Продолжить анализ"
+msgstr "Continue analysis"
+
+msgid "Произошла ошибка при отправке запроса"
+msgstr "There was an error sending your request"
+
+msgid "Вы уверены, что хотите удалить эту проверку"
+msgstr "Are you sure you want to remove this check"
+
+msgid "Произошла ошибка при удалении проверки"
+msgstr "An error occurred while deleting the check"
+
+#: ai_check/templates/document_view.html:19 ai_check/templates/document_view.html:585
+msgid "Исходный документ"
+msgstr "Original document"
+
+msgid "Все замечания"
+msgstr "All comments"
+
+msgid "Стиль"
+msgstr "Style"
+
+msgid "Результаты анализа"
+msgstr "Results of the analysis"
+
+msgid "Найденные замечания"
+msgstr "Found comments"
+
+msgid "Анализ"
+msgstr "Analysis"
+
+msgid "Кликните на выделенный фрагмент в тексте, чтобы увидеть детали замечания"
+msgstr "Click on the highlighted fragment in the text to see the details of the comment"
+
+msgid "Выбранное замечание"
+msgstr "Selected remark"
+
+msgid "Анализируемый фрагмент"
+msgstr "The analyzed fragment"
+
+msgid "Тип замечания"
+msgstr "Type of remark"
+
+msgid "Приоритет"
+msgstr "Priority"
+
+msgid "Описание замечания"
+msgstr "Description of the remark"
+
+msgid "Рекомендация по улучшению"
+msgstr "Recommendation for improvement"
+
+msgid "Как улучшить"
+msgstr "How to improve"
+
+msgid "Все найденные замечания"
+msgstr "All found comments"
+
+msgid "Логика изложения"
+msgstr "Logic of presentation"
+
+msgid "Грамматика и стиль"
+msgstr "Grammar and style"
+
+msgid "Замечания не найдены"
+msgstr "No comments found"
+
+msgid "Цитата не найдена"
+msgstr "Quote not found"
+
+msgid "Описание отсутствует"
+msgstr "Description is missing"
+
+msgid "Грамматическое замечание"
+msgstr "Grammatical note"
+
+msgid "Стилистическое замечание"
+msgstr "Stylistic note"
+
+msgid "Замечание по логике"
+msgstr "A note on logic"
+
+msgid "Структурное замечание"
+msgstr "Structural note"
+
+msgid "Замечание по оригинальности"
+msgstr "Description is missing"
+
+msgid "Высокая"
+msgstr "High"
+
+msgid "Средняя"
+msgstr "Average"
+
+msgid "Низкая"
+msgstr "Low"
+
+msgid "Введите логин и пароль."
+msgstr "Enter your login and password."
+
+msgid "Неверный логин или пароль. Проверьте данные и попробуйте снова."
+msgstr "Incorrect login or password. Check the data and try again."
+
+msgid "До свидания, {}!"
+msgstr "Goodbye, {}!"
+
+msgid "Ваше сообщение успешно отправлено!"
+msgstr "Your message has been sent successfully!"
+
+msgid "Документ содержит {char_count:,} символов (больше рекомендуемых 100,000). Текст будет сокращен для анализа."
+msgstr "The document contains {char_count:,} characters (more than the recommended 100,000). The text will be shortened for analysis."

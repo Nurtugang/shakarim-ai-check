@@ -1,20 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load i18n %}
 
 {% block main %}
 <main class="container mx-auto px-4 py-12">
     <div class="glass-card p-8 text-white">
-        <h1 class="text-3xl font-bold mb-8 text-center">Контактная информация</h1>
-        
-        <!-- Информация о Shakarim University -->
-        <div class="mb-10">
-            <div class="flex justify-center mb-6">
-                <img src="{% static 'img/logo.png' %}" alt="Shakarim University Logo" class="rounded-lg h-40">
-            </div>
-            
-            <h2 class="text-2xl font-semibold mb-4 text-center text-blue-400">Shakarim University</h2>
-            <p class="text-xl text-center mb-6 text-gray-300">Инновационный университет Казахстана</p>
-        </div>
+        <h1 class="text-3xl font-bold mb-8 text-center">{% trans "Контактная информация" %}</h1>
         
         <!-- Контактная информация -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
@@ -22,33 +13,32 @@
                 <div class="text-blue-400 mb-4">
                     <i class="fas fa-map-marker-alt text-3xl"></i>
                 </div>
-                <h3 class="font-semibold text-lg mb-2">Адрес</h3>
-                <p class="text-gray-300">г. Семей, область Абай</p>
-                <p class="text-gray-300">Республика Казахстан</p>
+                <h3 class="font-semibold text-lg mb-2">{% trans "Адрес" %}</h3>
+                <p class="text-gray-300">{% trans "г. Семей, область Абай" %}</p>
+                <p class="text-gray-300">{% trans "Республика Казахстан" %}</p>
             </div>
             
             <div class="glass-card p-6 bg-opacity-30 text-center feature-card">
                 <div class="text-blue-400 mb-4">
                     <i class="fas fa-phone text-3xl"></i>
                 </div>
-                <h3 class="font-semibold text-lg mb-2">Телефон</h3>
-                <p class="text-gray-300">+7 (7222) 32-33-34</p>
-                <p class="text-gray-300">+7 (7222) 56-78-90</p>
+                <h3 class="font-semibold text-lg mb-2">{% trans "Телефон" %}</h3>
+                <p class="text-gray-300">+7 (708) 928-58-50</p>
             </div>
             
             <div class="glass-card p-6 bg-opacity-30 text-center feature-card">
                 <div class="text-blue-400 mb-4">
                     <i class="fas fa-envelope text-3xl"></i>
                 </div>
-                <h3 class="font-semibold text-lg mb-2">Email</h3>
-                <p class="text-gray-300">info@shakarim.edu.kz</p>
-                <p class="text-gray-300">support@shakarim.edu.kz</p>
+                <h3 class="font-semibold text-lg mb-2">{% trans "Электронная почта" %}</h3>
+                <p class="text-gray-300">n.azatbekuly@shakarim.kz</p>
+                <p class="text-gray-300">hub@shakarim.kz</p>
             </div>
         </div>
         
         <!-- Карта -->
         <div class="mb-10">
-            <h2 class="text-2xl font-semibold mb-6 text-blue-400">Мы на карте</h2>
+            <h2 class="text-2xl font-semibold mb-6 text-blue-400">{% trans "Мы на карте" %}</h2>
             <div class="glass-card p-6 bg-opacity-30">
                 <div class="w-full h-96 rounded-lg overflow-hidden">
                     <iframe id="map_164793031" frameborder="0" width="100%" height="600px" sandbox="allow-modals allow-forms allow-scripts allow-same-origin allow-popups allow-top-navigation-by-user-activation"></iframe><script type="text/javascript">(function(e,t){var r=document.getElementById(e);r.contentWindow.document.open(),r.contentWindow.document.write(atob(t)),r.contentWindow.document.close()})("map_164793031", "PGJvZHk+PHN0eWxlPgogICAgICAgIGh0bWwsIGJvZHkgewogICAgICAgICAgICBtYXJnaW46IDA7CiAgICAgICAgICAgIHBhZGRpbmc6IDA7CiAgICAgICAgfQogICAgICAgIGh0bWwsIGJvZHksICNtYXAgewogICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgaGVpZ2h0OiAxMDAlOwogICAgICAgIH0KICAgICAgICAuYnVsbGV0LW1hcmtlciB7CiAgICAgICAgICAgIHdpZHRoOiAyMHB4OwogICAgICAgICAgICBoZWlnaHQ6IDIwcHg7CiAgICAgICAgICAgIGJveC1zaXppbmc6IGJvcmRlci1ib3g7CiAgICAgICAgICAgIGJhY2tncm91bmQtY29sb3I6ICNmZmY7CiAgICAgICAgICAgIGJveC1zaGFkb3c6IDAgMXB4IDNweCAwIHJnYmEoMCwgMCwgMCwgMC4yKTsKICAgICAgICAgICAgYm9yZGVyOiA0cHggc29saWQgIzAyODFmMjsKICAgICAgICAgICAgYm9yZGVyLXJhZGl1czogNTAlOwogICAgICAgIH0KICAgICAgICAucGVybWFuZW50LXRvb2x0aXAgewogICAgICAgICAgICBiYWNrZ3JvdW5kOiBub25lOwogICAgICAgICAgICBib3gtc2hhZG93OiBub25lOwogICAgICAgICAgICBib3JkZXI6IG5vbmU7CiAgICAgICAgICAgIHBhZGRpbmc6IDZweCAxMnB4OwogICAgICAgICAgICBjb2xvcjogIzI2MjYyNjsKICAgICAgICB9CiAgICAgICAgLnBlcm1hbmVudC10b29sdGlwOmJlZm9yZSB7CiAgICAgICAgICAgIGRpc3BsYXk6IG5vbmU7CiAgICAgICAgfQogICAgICAgIC5kZy1wb3B1cF9oaWRkZW5fdHJ1ZSB7CiAgICAgICAgICAgIGRpc3BsYXk6IGJsb2NrOwogICAgICAgIH0KICAgICAgICAubGVhZmxldC1jb250YWluZXIgLmxlYWZsZXQtcG9wdXAgLmxlYWZsZXQtcG9wdXAtY2xvc2UtYnV0dG9uIHsKICAgICAgICAgICAgdG9wOiAwOwogICAgICAgICAgICByaWdodDogMDsKICAgICAgICAgICAgd2lkdGg6IDIwcHg7CiAgICAgICAgICAgIGhlaWdodDogMjBweDsKICAgICAgICAgICAgZm9udC1zaXplOiAyMHB4OwogICAgICAgICAgICBsaW5lLWhlaWdodDogMTsKICAgICAgICB9CiAgICA8L3N0eWxlPjxkaXYgaWQ9Im1hcCI+PC9kaXY+PHNjcmlwdCB0eXBlPSJ0ZXh0L2phdmFzY3JpcHQiIHNyYz0iaHR0cHM6Ly9tYXBzLmFwaS4yZ2lzLnJ1LzIuMC9sb2FkZXIuanM/cGtnPWZ1bGwmYW1wO3NraW49bGlnaHQiPjwvc2NyaXB0PjxzY3JpcHQ+KGZ1bmN0aW9uKGUpe3ZhciB0PUpTT04ucGFyc2UoZSkscj10Lm9yZGVyZWRHZW9tZXRyaWVzLG49dC5tYXBQb3NpdGlvbixhPXQuaXNXaGVlbFpvb21FbmFibGVkO2Z1bmN0aW9uIG8oZSl7cmV0dXJuIGRlY29kZVVSSUNvbXBvbmVudChhdG9iKGUpLnNwbGl0KCIiKS5tYXAoZnVuY3Rpb24oZSl7cmV0dXJuIiUiKygiMDAiK2UuY2hhckNvZGVBdCgwKS50b1N0cmluZygxNikpLnNsaWNlKC0yKX0pLmpvaW4oIiIpKX1ERy50aGVuKGZ1bmN0aW9uKCl7dmFyIGU9REcubWFwKCJtYXAiLHtjZW50ZXI6W24ubGF0LG4ubG9uXSx6b29tOm4uem9vbSxzY3JvbGxXaGVlbFpvb206YSx6b29tQ29udHJvbDohYX0pO0RHLmdlb0pTT04ocix7c3R5bGU6ZnVuY3Rpb24oZSl7dmFyIHQscixuLGEsbztyZXR1cm57ZmlsbENvbG9yOm51bGw9PT0odD1lKXx8dm9pZCAwPT09dD92b2lkIDA6dC5wcm9wZXJ0aWVzLmZpbGxDb2xvcixmaWxsT3BhY2l0eTpudWxsPT09KHI9ZSl8fHZvaWQgMD09PXI/dm9pZCAwOnIucHJvcGVydGllcy5maWxsT3BhY2l0eSxjb2xvcjpudWxsPT09KG49ZSl8fHZvaWQgMD09PW4/dm9pZCAwOm4ucHJvcGVydGllcy5zdHJva2VDb2xvcix3ZWlnaHQ6bnVsbD09PShhPWUpfHx2b2lkIDA9PT1hP3ZvaWQgMDphLnByb3BlcnRpZXMuc3Ryb2tlV2lkdGgsb3BhY2l0eTpudWxsPT09KG89ZSl8fHZvaWQgMD09PW8/dm9pZCAwOm8ucHJvcGVydGllcy5zdHJva2VPcGFjaXR5fX0scG9pbnRUb0xheWVyOmZ1bmN0aW9uKGUsdCl7cmV0dXJuInJhZGl1cyJpbiBlLnByb3BlcnRpZXM/REcuY2lyY2xlKHQsZS5wcm9wZXJ0aWVzLnJhZGl1cyk6REcubWFya2VyKHQse2ljb246ZnVuY3Rpb24oZSl7cmV0dXJuIERHLmRpdkljb24oe2h0bWw6IjxkaXYgY2xhc3M9J2J1bGxldC1tYXJrZXInIHN0eWxlPSdib3JkZXItY29sb3I6ICIrZSsiOyc+PC9kaXY+IixjbGFzc05hbWU6Im92ZXJyaWRlLWRlZmF1bHQiLGljb25TaXplOlsyMCwyMF0saWNvbkFuY2hvcjpbMTAsMTBdfSl9KGUucHJvcGVydGllcy5jb2xvcil9KX0sb25FYWNoRmVhdHVyZTpmdW5jdGlvbihlLHQpe2UucHJvcGVydGllcy5kZXNjcmlwdGlvbiYmdC5iaW5kUG9wdXAobyhlLnByb3BlcnRpZXMuZGVzY3JpcHRpb24pLHtjbG9zZUJ1dHRvbjohMCxjbG9zZU9uRXNjYXBlS2V5OiEwfSksZS5wcm9wZXJ0aWVzLnRpdGxlJiZ0LmJpbmRUb29sdGlwKG8oZS5wcm9wZXJ0aWVzLnRpdGxlKSx7cGVybWFuZW50OiEwLG9wYWNpdHk6MSxjbGFzc05hbWU6InBlcm1hbmVudC10b29sdGlwIn0pfX0pLmFkZFRvKGUpfSl9KSgneyJvcmRlcmVkR2VvbWV0cmllcyI6W3sidHlwZSI6IkZlYXR1cmUiLCJwcm9wZXJ0aWVzIjp7ImNvbG9yIjoiIzAyODFmMiIsInRpdGxlIjoiVTJoaGEyRnlhVzBnVlc1cGRtVnljMmwwZVE9PSIsImRlc2NyaXB0aW9uIjoiIiwiekluZGV4IjoxMDAwMDAwMDAwfSwiZ2VvbWV0cnkiOnsidHlwZSI6IlBvaW50IiwiY29vcmRpbmF0ZXMiOls4MC4yMTMwNDUsNTAuMzk5Mjc5XX0sImlkIjoxNTQzfV0sIm1hcFBvc2l0aW9uIjp7ImxhdCI6NTAuNDA4OTU1MTM0MzQsImxvbiI6ODAuMjkxODYyNDg3NzkyOTgsInpvb20iOjEzfSwiaXNXaGVlbFpvb21FbmFibGVkIjp0cnVlfScpPC9zY3JpcHQ+PHNjcmlwdCBhc3luYz0iIiBzcmM9Imh0dHBzOi8vd3d3Lmdvb2dsZXRhZ21hbmFnZXIuY29tL2d0YWcvanM/aWQ9Ry1UODZLTUQwM0M3Ij48L3NjcmlwdD48c2NyaXB0IGlkPSJnb29nbGUtYW5hbHl0aWNzIj4KICAgICAgd2luZG93LmRhdGFMYXllciA9IHdpbmRvdy5kYXRhTGF5ZXIgfHwgW107CiAgICAgIGZ1bmN0aW9uIGd0YWcoKXtkYXRhTGF5ZXIucHVzaChhcmd1bWVudHMpO30KICAgICAgZ3RhZygnanMnLCBuZXcgRGF0ZSgpKTsKICAgICAgZ3RhZygnY29uZmlnJywgJ0ctVDg2S01EMDNDNycsIHsiY29va2llX2ZsYWdzIjoiU2FtZVNpdGU9Tm9uZTsgU2VjdXJlOyBQYXJ0aXRpb25lZCIsImNvb2tpZV91cGRhdGUiOmZhbHNlfSk7CiAgICAgIHRydWUgJiYgZ3RhZygnZXZlbnQnLCAnZnJvbV9pZnJhbWUnKTsKICAgIDwvc2NyaXB0PjwvYm9keT4=")</script>
@@ -58,52 +48,53 @@
         
         <!-- Соцсети -->
         <div class="mb-10">
-            <h2 class="text-2xl font-semibold mb-6 text-blue-400">Мы в социальных сетях</h2>
+            <h2 class="text-2xl font-semibold mb-6 text-blue-400">{% trans "Мы в социальных сетях" %}</h2>
             <div class="flex justify-center space-x-6">
-                <a href="#" class="text-blue-400 hover:text-blue-300 text-3xl">
+                <a href="https://www.facebook.com/universitet.shakarim.1" target="_blank" class="text-blue-400 hover:text-blue-300 text-3xl">
                     <i class="fab fa-facebook"></i>
                 </a>
-                <a href="#" class="text-blue-400 hover:text-blue-300 text-3xl">
+                <a href="https://www.instagram.com/shakarim_university" target="_blank" class="text-blue-400 hover:text-blue-300 text-3xl">
                     <i class="fab fa-instagram"></i>
                 </a>
-                <a href="#" class="text-blue-400 hover:text-blue-300 text-3xl">
+                <a href="https://www.youtube.com/channel/UCXJxFbPBx_Vot4V96_oekDg" target="_blank" class="text-blue-400 hover:text-blue-300 text-3xl">
                     <i class="fab fa-youtube"></i>
                 </a>
-                <a href="#" class="text-blue-400 hover:text-blue-300 text-3xl">
+                <a href="https://t.me/shakarimmedia" target="_blank" class="text-blue-400 hover:text-blue-300 text-3xl">
                     <i class="fab fa-telegram"></i>
                 </a>
-                <a href="#" class="text-blue-400 hover:text-blue-300 text-3xl">
-                    <i class="fab fa-linkedin"></i>
+                <a href="https://www.tiktok.com/@shakarim_university?_t=8eUlT4aAOhC&_r=1" target="_blank" class="text-blue-400 hover:text-blue-300 text-3xl">
+                    <i class="fab fa-tiktok"></i>
                 </a>
             </div>
         </div>
         
         <!-- Форма обратной связи -->
         <div>
-            <h2 class="text-2xl font-semibold mb-6 text-blue-400">Свяжитесь с нами</h2>
+            <h2 class="text-2xl font-semibold mb-6 text-blue-400">{% trans "Свяжитесь с нами" %}</h2>
             <div class="glass-card p-6 bg-opacity-30">
-                <form class="space-y-4">
+                <form method="POST" class="space-y-4">
+                    {% csrf_token %}
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-gray-300 mb-2" for="name">Ваше имя</label>
-                            <input type="text" id="name" class="w-full py-3 px-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-gray-300 mb-2" for="name">{% trans "Ваше имя" %}</label>
+                            <input type="text" id="name" name="name" required class="w-full py-3 px-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                         <div>
-                            <label class="block text-gray-300 mb-2" for="email">Email</label>
-                            <input type="email" id="email" class="w-full py-3 px-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <label class="block text-gray-300 mb-2" for="email">{% trans "Электронная почта" %}</label>
+                            <input type="email" id="email" name="email" required class="w-full py-3 px-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-gray-300 mb-2" for="subject">Тема</label>
-                        <input type="text" id="subject" class="w-full py-3 px-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label class="block text-gray-300 mb-2" for="subject">{% trans "Тема" %}</label>
+                        <input type="text" id="subject" name="subject" required class="w-full py-3 px-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div>
-                        <label class="block text-gray-300 mb-2" for="message">Сообщение</label>
-                        <textarea id="message" rows="4" class="w-full py-3 px-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        <label class="block text-gray-300 mb-2" for="message">{% trans "Сообщение" %}</label>
+                        <textarea id="message" name="message" rows="4" required class="w-full py-3 px-4 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
                     </div>
                     <div class="text-center">
                         <button type="submit" class="btn-gradient py-3 px-8 rounded-lg text-white font-semibold shadow-lg">
-                            Отправить
+                            {% trans "Отправить" %}
                         </button>
                     </div>
                 </form>
