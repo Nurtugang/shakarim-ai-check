@@ -19,23 +19,27 @@
 <body class="gradient-bg min-h-screen">
     <header class="sticky top-0 z-50 gradient-bg" x-data="{ open: false }">
     <div class="container mx-auto px-4 py-6">
-    <div class="relative flex items-center justify-center">
+    <div class="flex items-center justify-between relative">
 
         <!-- Кнопка меню на мобилке -->
-        <div class="absolute left-0 md:hidden">
+        <div class="absolute left-0 lg:hidden">
             <button @click="open = !open" class="text-white focus:outline-none">
                 <i class="fas fa-bars text-xl"></i>
             </button>
         </div>
 
-        <!-- Логотип строго по центру -->
-        <div class="text-white font-bold text-2xl logo-nopulse">
+        <!-- Логотип -->
+        <div class="text-white font-bold text-lg logo-nopulse flex-1 lg:flex-none lg:w-auto">
             <a href="{% url 'index' %}">
-                <img src="{% static 'img/university.png' %}" alt="Shakarim AI Check Logo" class="h-10 mx-auto">
+                <img 
+                    src="{% static 'img/university.png' %}" 
+                    alt="Shakarim AI Check Logo" 
+                    class="mx-auto lg:mx-0 h-7 lg:h-10 transition-all duration-200"
+                >
             </a>
         </div>
         <!-- Меню для десктопа -->
-        <nav class="absolute right-0 hidden md:flex space-x-6">
+        <nav class="absolute right-0 hidden lg:flex space-x-6">
             <a href="{% url 'index' %}" class="text-white hover:text-blue-300 transition">{% trans "Главная" %}</a>
             <a href="{% url 'instructions' %}" class="text-white hover:text-blue-300 transition">{% trans "Инструкция" %}</a>
             <a href="{% url 'contacts' %}" class="text-white hover:text-blue-300 transition">{% trans "Контакты" %}</a>
@@ -74,7 +78,7 @@
     </div>
 
     <!-- Мобильное меню -->
-    <div x-show="open" class="md:hidden mt-4 bg-white rounded-lg p-4 space-y-3 shadow-lg text-black">
+    <div x-show="open" class="lg:hidden mt-4 bg-white rounded-lg p-4 space-y-3 shadow-lg text-black">
         <a href="{% url 'index' %}" class="block hover:text-blue-600">{% trans "Главная" %}</a>
         <a href="{% url 'instructions' %}" class="block hover:text-blue-600">{% trans "Инструкция" %}</a>
         <a href="{% url 'contacts' %}" class="block hover:text-blue-600">{% trans "Контакты" %}</a>

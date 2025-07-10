@@ -46,10 +46,43 @@
 
     <!-- Индикатор загрузки (скрыт по умолчанию) -->
     <div id="loading-container" class="glass-card p-6 mb-8 hidden">
-        <div class="flex flex-col items-center justify-center text-white">
-            <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-400 mb-4"></div>
-            <p class="text-lg">{% trans "Анализ документа" %}...</p>
-            <p class="text-sm text-gray-400 mt-2">{% trans "Это может занять несколько минут в зависимости от размера документа" %}</p>
+        <div class="text-white">
+            <!-- Спиннер сверху -->
+            <div class="flex justify-center mb-4">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-400"></div>
+            </div>
+            
+            <!-- Текст ниже -->
+            <div class="text-center mb-6">
+                <h3 class="text-xl font-semibold">{% trans "Анализ документа" %}</h3>
+                <p id="current-stage-text" class="text-blue-400 mt-1">{% trans "Загружаем файл" %}...</p>
+            </div>
+            
+            <!-- Таймер -->
+            <div class="text-center mb-6">
+                <div class="text-2xl font-mono text-blue-400" id="timer">0:00</div>
+                <div class="text-sm text-gray-400">{% trans "Время выполнения" %}</div>
+            </div>
+            
+            <!-- Этапы с точками -->
+            <div class="flex justify-center items-center space-x-4 mb-6">
+                <div class="flex items-center">
+                    <div id="stage-dot-1" class="w-3 h-3 bg-blue-500 rounded-full transition-all duration-500"></div>
+                    <div class="text-sm ml-2 text-blue-400">{% trans "Загрузка" %}</div>
+                </div>
+                <div class="w-8 h-px bg-gray-600"></div>
+                <div class="flex items-center">
+                    <div id="stage-dot-2" class="w-3 h-3 bg-gray-600 rounded-full transition-all duration-500"></div>
+                    <div class="text-sm ml-2 text-gray-400">{% trans "Извлечение" %}</div>
+                </div>
+                <div class="w-8 h-px bg-gray-600"></div>
+                <div class="flex items-center">
+                    <div id="stage-dot-3" class="w-3 h-3 bg-gray-600 rounded-full transition-all duration-500"></div>
+                    <div class="text-sm ml-2 text-gray-400">{% trans "Анализ ИИ" %}</div>
+                </div>
+            </div>
+            
+            <p class="text-sm text-gray-400 text-center">{% trans "Это может занять несколько минут в зависимости от размера документа" %}</p>
         </div>
     </div>
 
@@ -171,6 +204,7 @@
             // Показываем индикатор загрузки
             uploadContainer.classList.add('hidden');
             loadingContainer.classList.remove('hidden');
+            const stopTimer = startProcessingSimulation();
             
             // Создаем контроллер для отмены запроса
             const controller = new AbortController();
@@ -195,6 +229,7 @@
                 return response.json();
             })
             .then(data => {
+                stopTimer();
                 loadingContainer.classList.add('hidden');
                 
                 if (data.status === 'success') {
@@ -249,6 +284,7 @@
             })
             .catch(error => {
                 clearTimeout(timeoutId);
+                stopTimer();
                 loadingContainer.classList.add('hidden');
                 uploadContainer.classList.remove('hidden');
                 alert(error.message || '{% trans "Произошла ошибка при отправке запроса" %}');
@@ -282,5 +318,41 @@
             });
         });
     });
+
+
+    // Имитация этапов обработки
+function startProcessingSimulation() {
+    let startTime = Date.now();
+    let currentStage = 1;
+    
+    // Запуск таймера
+    const timerInterval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000);
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = elapsed % 60;
+        document.getElementById('timer').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }, 1000);
+    
+    // Этап 1: Загрузка файла (1 секунда)
+    setTimeout(() => {
+        currentStage = 2;
+        document.getElementById('current-stage-text').textContent = '{% trans "Извлекаем текст" %}...';
+        document.getElementById('stage-dot-1').className = 'w-3 h-3 bg-green-500 rounded-full transition-all duration-500';
+        document.getElementById('stage-dot-2').className = 'w-3 h-3 bg-blue-500 rounded-full transition-all duration-500 animate-pulse';
+        document.querySelector('#stage-dot-2').nextElementSibling.className = 'text-sm ml-2 text-blue-400';
+    }, 1000);
+    
+    // Этап 2: Извлечение текста (1 секунда)
+    setTimeout(() => {
+        currentStage = 3;
+        document.getElementById('current-stage-text').textContent = '{% trans "Анализируем с помощью ИИ" %}...';
+        document.getElementById('stage-dot-2').className = 'w-3 h-3 bg-green-500 rounded-full transition-all duration-500';
+        document.getElementById('stage-dot-3').className = 'w-3 h-3 bg-purple-500 rounded-full transition-all duration-500 animate-pulse';
+        document.querySelector('#stage-dot-3').nextElementSibling.className = 'text-sm ml-2 text-purple-400';
+    }, 2000);
+    
+    // Возвращаем функцию для остановки таймера
+    return () => clearInterval(timerInterval);
+}
 </script>
 {% endblock main %}

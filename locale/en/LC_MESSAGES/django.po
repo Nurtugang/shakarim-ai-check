@@ -598,3 +598,24 @@ msgstr "Your message has been sent successfully!"
 
 msgid "Документ содержит {char_count:,} символов (больше рекомендуемых 100,000). Текст будет сокращен для анализа."
 msgstr "The document contains {char_count:,} characters (more than the recommended 100,000). The text will be shortened for analysis."
+
+msgid "Загружаем файл"
+msgstr "Uploading file"
+
+msgid "Извлекаем текст"
+msgstr "Extracting text"
+
+msgid "Анализируем с помощью ИИ"
+msgstr "Analyzing with AI"
+
+msgid "Время выполнения"
+msgstr "Processing time"
+
+msgid "Загрузка"
+msgstr "Upload"
+
+msgid "Извлечение"
+msgstr "Extract"
+
+msgid "Анализ ИИ"
+msgstr "AI Analysis"
