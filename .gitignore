@@ -20,6 +20,12 @@ media/*
 static/
 static/*
 
+!ai_check/static/
+!ai_check/static/**
+
+!index/static/
+!index/static/**
+
 logs/
 logs/*
 

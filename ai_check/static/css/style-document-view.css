@@ -1,0 +1,180 @@
+/* ===== ПЕРЕКЛЮЧАТЕЛЬ ТЕМЫ ===== */
+.theme-toggle-btn {
+    padding: 4px 8px;
+    border-radius: 6px;
+    background-color: rgba(55, 65, 81, 0.7);
+    color: #9ca3af;
+    border: 1px solid rgba(75, 85, 99, 0.5);
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 60px;
+    text-align: center;
+}
+
+.theme-toggle-btn:hover {
+    background-color: rgba(75, 85, 99, 0.7);
+    color: #e5e7eb;
+}
+
+.theme-toggle-btn.active {
+    background-color: rgba(59, 130, 246, 0.3);
+    color: #93c5fd;
+    border-color: #3b82f6;
+}
+
+
+/* ===== ИНТЕРФЕЙС (ТЕМНАЯ ТЕМА) ===== */
+
+/* Индикаторы типов ошибок */
+.error-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 4px;
+}
+
+.error-indicator.grammar { background-color: #ef4444; }
+.error-indicator.style { background-color: #f59e0b; }
+.error-indicator.logic { background-color: #a855f7; }
+.error-indicator.structure { background-color: #22c55e; }
+.error-indicator.originality { background-color: #f97316; }
+
+/* Кнопки фильтров */
+.filter-btn {
+    padding: 8px 12px;
+    border-radius: 8px;
+    background-color: rgba(55, 65, 81, 0.5);
+    color: #9ca3af;
+    border: 1px solid rgba(75, 85, 99, 0.5);
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.filter-btn:hover {
+    background-color: rgba(75, 85, 99, 0.5);
+    color: #e5e7eb;
+}
+
+.filter-btn.active {
+    background-color: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    border-color: #3b82f6;
+}
+
+/* Сетка фильтров */
+#error-filters {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+/* Карточки ошибок */
+.error-card {
+    background-color: rgba(31, 41, 55, 0.5);
+    border: 1px solid rgba(75, 85, 99, 0.3);
+    border-radius: 8px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.error-card:hover {
+    background-color: rgba(31, 41, 55, 0.8);
+    border-color: rgba(156, 163, 175, 0.5);
+}
+
+.error-card.selected {
+    border-color: #3b82f6;
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Значки критичности */
+.severity-high { background-color: #dc2626; color: white; }
+.severity-medium { background-color: #d97706; color: white; }
+.severity-low { background-color: #16a34a; color: white; }
+
+/* ===== АДАПТИВНОСТЬ ===== */
+@media (max-width: 1200px) {
+    #error-filters {
+        grid-template-columns: repeat(3, 1fr); 
+    }
+}
+
+@media (max-width: 768px) {
+    #error-filters {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .docx-viewer .paragraph {
+        text-indent: 1em; /* Меньше отступ на мобильных */
+        margin-bottom: 0.5rem;
+    }
+    
+    .docx-viewer .docx-content {
+        padding: 0.5rem;
+    }
+    
+    .docx-viewer .docx-table {
+        font-size: 0.875rem;
+    }
+    
+    .docx-viewer .docx-table td {
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #error-filters {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Специальные стили для мобильных оценок */
+.analysis-score-structure,
+.analysis-score-logic,
+.analysis-score-grammar,
+.analysis-score-originality {
+    margin: 0 0 8px 0 !important;
+}
+
+#analysis-scores-row span:first-child {
+    margin-left: 0 !important;
+}
+
+@media (max-width: 640px) {
+    #analysis-scores-row {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 8px !important;
+    }
+    #analysis-scores-row .score-label {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 2px;
+    }
+    #analysis-scores-row .score-value {
+        display: block;
+        width: 100%;
+        text-align: center;
+        font-size: 1.1em;
+        font-weight: bold;
+        margin-top: 0;
+    }
+}
+
+@media (min-width: 641px) {
+    #analysis-scores-row .score-label, #analysis-scores-row .score-value {
+        display: inline;
+        width: auto;
+        text-align: left;
+        font-size: inherit;
+        font-weight: normal;
+        margin: 0;
+    }
+}

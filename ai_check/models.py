@@ -15,6 +15,7 @@ class Check(models.Model):
     file_name = models.CharField(max_length=255, verbose_name="Имя файла")
     original_file = models.FileField(upload_to='original_files/%Y/%m/%d/', verbose_name="Исходный файл")
     extracted_text = models.TextField(blank=True, null=True, verbose_name="Извлеченный текст")
+    extracted_html = models.TextField(blank=True, null=True, verbose_name="Извлеченный HTML")
     
     # Результаты проверки
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending', verbose_name="Статус")
@@ -27,7 +28,7 @@ class Check(models.Model):
     # JSON-поля для хранения детального анализа
     detailed_analysis = models.JSONField(null=True, blank=True, verbose_name="Детальный анализ")
     recommendations = models.JSONField(null=True, blank=True, verbose_name="Рекомендации")
-    errors_analysis = models.JSONField(null=True, blank=True, verbose_name="Анализ ошибок")  # НОВОЕ ПОЛЕ
+    errors_analysis = models.JSONField(null=True, blank=True, verbose_name="Анализ ошибок")
     
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Дата обновления")

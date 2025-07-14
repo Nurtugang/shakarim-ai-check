@@ -1,0 +1,98 @@
+/* ===== ВЫДЕЛЕНИЯ ОШИБОК ДЛЯ ТЕМНОЙ ТЕМЫ ===== */
+.error-highlight {
+    position: relative;
+    cursor: pointer;
+    border-radius: 3px;
+    padding: 1px 3px;
+    transition: all 0.3s ease;
+    display: inline;
+    line-height: inherit;
+}
+
+.error-highlight:hover {
+    opacity: 0.8;
+    transform: scale(1.02);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Типы ошибок для темного фона */
+.error-highlight.grammar {
+    background-color: rgba(239, 68, 68, 0.3);
+    border-bottom: 2px solid #ef4444;
+}
+
+.error-highlight.style {
+    background-color: rgba(245, 158, 11, 0.3);
+    border-bottom: 2px solid #f59e0b;
+}
+
+.error-highlight.logic {
+    background-color: rgba(168, 85, 247, 0.3);
+    border-bottom: 2px solid #a855f7;
+}
+
+.error-highlight.structure {
+    background-color: rgba(34, 197, 94, 0.3);
+    border-bottom: 2px solid #22c55e;
+}
+
+.error-highlight.originality {
+    background-color: rgba(249, 115, 22, 0.3);
+    border-bottom: 2px solid #f97316;
+}
+
+.error-highlight.selected {
+    background-color: rgba(59, 130, 246, 0.4) !important;
+    border-bottom: 2px solid #3b82f6 !important;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+    z-index: 10;
+    position: relative;
+}
+
+.error-highlight.hidden-filter {
+    background-color: transparent !important;
+    border-bottom: none !important;
+    cursor: default;
+    box-shadow: none !important;
+}
+
+
+/* Выделения ошибок для светлой темы */
+.docx-viewer.light-theme .error-highlight.grammar {
+    background-color: rgba(239, 68, 68, 0.2);
+    border-bottom: 2px solid #dc2626;
+    color: #991b1b;
+}
+
+.docx-viewer.light-theme .error-highlight.style {
+    background-color: rgba(245, 158, 11, 0.2);
+    border-bottom: 2px solid #d97706;
+    color: #92400e;
+}
+
+.docx-viewer.light-theme .error-highlight.logic {
+    background-color: rgba(168, 85, 247, 0.2);
+    border-bottom: 2px solid #7c3aed;
+    color: #5b21b6;
+}
+
+.docx-viewer.light-theme .error-highlight.structure {
+    background-color: rgba(34, 197, 94, 0.2);
+    border-bottom: 2px solid #16a34a;
+    color: #15803d;
+}
+
+.docx-viewer.light-theme .error-highlight.originality {
+    background-color: rgba(249, 115, 22, 0.2);
+    border-bottom: 2px solid #ea580c;
+    color: #9a3412;
+}
+
+.docx-viewer.light-theme .error-highlight.selected {
+    background-color: rgba(59, 130, 246, 0.3) !important;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+}
+
+.docx-viewer.light-theme .error-highlight.hidden-filter {
+    color: #1f2937 !important;
+}

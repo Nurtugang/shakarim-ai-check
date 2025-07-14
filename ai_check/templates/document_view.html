@@ -2,6 +2,12 @@
 {% load static %}
 {% load i18n %}
 
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/style-document-view.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style-error-highlight.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style-docx-viewer.css' %}">
+{% endblock head %}
+
 {% block main %}
 <main class="container mx-auto px-4 py-8">
     <div class="mb-6">
@@ -16,8 +22,10 @@
         <!-- Исходный документ с выделениями -->
         <div class="lg:w-1/2">
             <div class="glass-card p-4 mb-4">
-                <h2 class="text-xl font-semibold text-white mb-2">{% trans "Исходный документ" %}</h2>
-                
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-xl font-semibold text-white">{% trans "Исходный документ" %}</h2>
+                    <button id="theme-toggle" class="theme-toggle-btn">Светлая</button>
+                </div>
                 <!-- Фильтры ошибок -->
                 <div class="flex-wrap mb-4" id="error-filters" style="display: grid; grid-auto-flow: dense; grid-gap: 8px; width: 100%;">
                     <div class="filter-grid-container" style="display: contents;">
@@ -41,10 +49,10 @@
             </div>
             
             <div class="glass-card p-6 h-screen overflow-auto">
-                <div class="bg-gray-900 rounded-lg p-6 text-white font-mono text-sm leading-relaxed" id="document-text">
-                    <!-- Текст с выделениями будет загружен через JavaScript -->
+                <div class="bg-white rounded-lg p-6 text-gray-900 text-sm leading-relaxed docx-viewer shadow-inner" id="document-text">
+                    <!-- HTML с выделениями будет загружен через JavaScript -->
                 </div>
-            </div>
+            </div>  
         </div>
         
         <!-- Панель анализа -->
@@ -226,199 +234,17 @@
     </div>
 </main>
 
-<style>
-/* Стили для выделения ошибок */
-.error-highlight {
-    position: relative;
-    cursor: pointer;
-    border-radius: 2px;
-    padding: 1px 2px;
-    transition: all 0.2s ease;
-}
-
-.error-highlight:hover {
-    opacity: 0.8;
-    transform: scale(1.02);
-}
-
-.error-highlight.grammar {
-    background-color: rgba(239, 68, 68, 0.3);
-    border-bottom: 2px solid #ef4444;
-}
-
-.error-highlight.style {
-    background-color: rgba(245, 158, 11, 0.3);
-    border-bottom: 2px solid #f59e0b;
-}
-
-.error-highlight.logic {
-    background-color: rgba(168, 85, 247, 0.3);
-    border-bottom: 2px solid #a855f7;
-}
-
-.error-highlight.structure {
-    background-color: rgba(34, 197, 94, 0.3);
-    border-bottom: 2px solid #22c55e;
-}
-
-.error-highlight.originality {
-    background-color: rgba(249, 115, 22, 0.3);
-    border-bottom: 2px solid #f97316;
-}
-
-.error-highlight.selected {
-    background-color: rgba(59, 130, 246, 0.4) !important;
-    border-bottom: 2px solid #3b82f6 !important;
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-}
-
-.error-highlight.hidden-filter {
-    background-color: transparent !important;
-    border-bottom: none !important;
-    cursor: default;
-}
-
-/* Индикаторы типов ошибок */
-.error-indicator {
-    display: inline-block;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    margin-right: 4px;
-}
-
-.error-indicator.grammar { background-color: #ef4444; }
-.error-indicator.style { background-color: #f59e0b; }
-.error-indicator.logic { background-color: #a855f7; }
-.error-indicator.structure { background-color: #22c55e; }
-.error-indicator.originality { background-color: #f97316; }
-
-/* Кнопки фильтров */
-.filter-btn {
-    padding: 8px 12px;
-    border-radius: 8px;
-    background-color: rgba(55, 65, 81, 0.5);
-    color: #9ca3af;
-    border: 1px solid rgba(75, 85, 99, 0.5);
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-/* Добавляем стили для адаптивной сетки кнопок фильтра */
-#error-filters {
-    grid-template-columns: repeat(5, 1fr);
-}
-
-/* Медиа-запросы для управления количеством кнопок в ряду */
-@media (max-width: 1200px) {
-    #error-filters {
-        grid-template-columns: repeat(3, 1fr); 
-    }
-}
-
-@media (max-width: 768px) {
-    #error-filters {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 480px) {
-    #error-filters {
-        grid-template-columns: 1fr;
-    }
-}
-
-.filter-btn:hover {
-    background-color: rgba(75, 85, 99, 0.5);
-    color: #e5e7eb;
-}
-
-.filter-btn.active {
-    background-color: rgba(59, 130, 246, 0.2);
-    color: #60a5fa;
-    border-color: #3b82f6;
-}
-
-/* Карточки ошибок */
-.error-card {
-    background-color: rgba(31, 41, 55, 0.5);
-    border: 1px solid rgba(75, 85, 99, 0.3);
-    border-radius: 8px;
-    padding: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.error-card:hover {
-    background-color: rgba(31, 41, 55, 0.8);
-    border-color: rgba(156, 163, 175, 0.5);
-}
-
-.error-card.selected {
-    border-color: #3b82f6;
-    background-color: rgba(59, 130, 246, 0.1);
-}
-
-/* Значки критичности */
-.severity-high { background-color: #dc2626; color: white; }
-.severity-medium { background-color: #d97706; color: white; }
-.severity-low { background-color: #16a34a; color: white; }
-
-.analysis-score-structure,
-.analysis-score-logic,
-.analysis-score-grammar,
-.analysis-score-originality {
-    margin: 0 0 8px 0 !important;
-}
-#analysis-scores-row span:first-child {
-    margin-left: 0 !important;
-}
-@media (max-width: 640px) {
-    #analysis-scores-row {
-        display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 8px !important;
-    }
-    #analysis-scores-row .score-label {
-        display: block;
-        width: 100%;
-        text-align: center;
-        margin-bottom: 2px;
-    }
-    #analysis-scores-row .score-value {
-        display: block;
-        width: 100%;
-        text-align: center;
-        font-size: 1.1em;
-        font-weight: bold;
-        margin-top: 0;
-    }
-}
-@media (min-width: 641px) {
-    #analysis-scores-row .score-label, #analysis-scores-row .score-value {
-        display: inline;
-        width: auto;
-        text-align: left;
-        font-size: inherit;
-        font-weight: normal;
-        margin: 0;
-    }
-}
-</style>
 
 <!-- Безопасная передача данных через Django json_script -->
 {{ check.extracted_text|json_script:"document-data" }}
+{{ check.extracted_html|json_script:"document-html-data" }}
 {{ check.errors_analysis|json_script:"errors-data" }}
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Безопасное получение данных из Django
     const documentText = JSON.parse(document.getElementById('document-data').textContent);
+    const documentHTML = JSON.parse(document.getElementById('document-html-data').textContent);
     const errorsData = JSON.parse(document.getElementById('errors-data').textContent);
     
     console.log('Document text length:', documentText.length);
@@ -432,15 +258,20 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeErrorsList();
     initializeFilters();
     
+    // Новый код:
     function initializeDocument() {
         const documentContainer = document.getElementById('document-text');
-        if (!documentText || documentText.trim() === '') {
+        
+        // Используем HTML если доступен, иначе fallback на текст
+        let contentToDisplay = documentHTML || documentText;
+        
+        if (!contentToDisplay || contentToDisplay.trim() === '') {
             documentContainer.innerHTML = '<p class="text-gray-400">Текст документа не найден</p>';
             return;
         }
         
-        // Создаем HTML с выделениями
-        let htmlText = escapeHtml(documentText);
+        // Если используем HTML - не экранируем, если текст - экранируем
+        let htmlText = documentHTML ? contentToDisplay : escapeHtml(contentToDisplay);
         
         // Сортируем ошибки по позиции (от конца к началу, чтобы позиции не сбивались)
         const sortedErrors = errorsData
@@ -451,13 +282,20 @@ document.addEventListener('DOMContentLoaded', function() {
         // Добавляем выделения для ошибок
         sortedErrors.forEach(error => {
             const errorId = `error-${error.originalIndex}`;
-            const beforeText = htmlText.substring(0, error.start_pos);
-            const errorText = htmlText.substring(error.start_pos, error.end_pos);
-            const afterText = htmlText.substring(error.end_pos);
             
-            const highlightHtml = `<span class="error-highlight ${error.error_type}" data-error-id="${errorId}" data-error-index="${error.originalIndex}">${errorText}</span>`;
-            
-            htmlText = beforeText + highlightHtml + afterText;
+            // Для HTML нужен более сложный поиск и замена
+            if (documentHTML) {
+                htmlText = highlightErrorInHTML(htmlText, error, errorId);
+            } else {
+                // Старая логика для plain text
+                const beforeText = htmlText.substring(0, error.start_pos);
+                const errorText = htmlText.substring(error.start_pos, error.end_pos);
+                const afterText = htmlText.substring(error.end_pos);
+                
+                const highlightHtml = `<span class="error-highlight ${error.error_type}" data-error-id="${errorId}" data-error-index="${error.originalIndex}">${errorText}</span>`;
+                
+                htmlText = beforeText + highlightHtml + afterText;
+            }
         });
         
         documentContainer.innerHTML = htmlText;
@@ -470,7 +308,16 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     }
-    
+
+    function highlightErrorInHTML(htmlContent, error, errorId) {
+        // Простая реализация: ищем точное совпадение текста цитаты в HTML
+        const quote = error.quote;
+        const highlightHtml = `<span class="error-highlight ${error.error_type}" data-error-id="${errorId}" data-error-index="${error.originalIndex}">${quote}</span>`;
+        
+        // Заменяем первое вхождение цитаты на выделенную версию
+        return htmlContent.replace(quote, highlightHtml);
+    }
+
     function initializeErrorsList() {
         const errorsContainer = document.getElementById('errors-container');
         
@@ -660,6 +507,25 @@ document.addEventListener('DOMContentLoaded', function() {
         const div = document.createElement('div');
         div.textContent = text;
         return div.innerHTML;
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const docViewer = document.getElementById('document-text');
+    
+    if (themeToggle && docViewer) {
+        themeToggle.addEventListener('click', function() {
+            docViewer.classList.toggle('light-theme');
+            
+            if (docViewer.classList.contains('light-theme')) {
+                themeToggle.textContent = 'Темная';
+                themeToggle.classList.add('active');
+            } else {
+                themeToggle.textContent = 'Светлая';
+                themeToggle.classList.remove('active');
+            }
+        });
     }
 });
 </script>

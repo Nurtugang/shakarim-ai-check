@@ -12,7 +12,7 @@ class CheckAdmin(admin.ModelAdmin):
             'fields': ('user', 'file_name', 'original_file', 'status')
         }),
         ('Текст документа', {
-            'fields': ('extracted_text',),
+            'fields': ('extracted_text', 'extracted_html'),
             'classes': ('collapse',)
         }),
         ('Оценки', {

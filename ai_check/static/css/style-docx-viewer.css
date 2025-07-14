@@ -1,0 +1,182 @@
+/* ===== ТЕМНАЯ ТЕМА ДЛЯ ДОКУМЕНТА (ПО УМОЛЧАНИЮ) ===== */
+
+/* Основные стили для просмотрщика документов */
+.docx-viewer {
+    background-color: #1f2937;
+    color: #ffffff;
+    font-family: 'Times New Roman', Times, serif;
+    line-height: 1.6;
+    border: 1px solid #374151;
+}
+
+/* Контейнер документа */
+.docx-viewer .docx-content {
+    max-width: 100%;
+    margin: 0;
+    padding: 1rem;
+    line-height: 1.6;
+}
+
+/* ===== ПАРАГРАФЫ ===== */
+.docx-viewer .paragraph {
+    margin-bottom: 0.75rem;
+    min-height: 1.2em;
+    text-indent: 1.25em; /* Красная строка */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.docx-viewer .empty-paragraph {
+    height: 1.2em;
+    margin-bottom: 0.5rem;
+    text-indent: 0; /* Пустые параграфы без отступа */
+}
+
+/* Специальные случаи без красной строки */
+.docx-viewer .paragraph[style*="text-align: center"] {
+    text-align: center;
+    text-indent: 0;
+}
+
+.docx-viewer .paragraph[style*="text-align: right"] {
+    text-align: right;
+    text-indent: 0;
+}
+
+.docx-viewer .paragraph[style*="text-align: justify"] {
+    text-align: justify;
+}
+
+/* ===== ФОРМАТИРОВАНИЕ ТЕКСТА ===== */
+.docx-viewer strong {
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.docx-viewer em {
+    font-style: italic;
+}
+
+.docx-viewer u {
+    text-decoration: underline;
+}
+
+/* ===== ТАБЛИЦЫ (ТЕМНАЯ ТЕМА) ===== */
+.docx-viewer .docx-table {
+    border-collapse: collapse;
+    margin: 1rem 0;
+    width: 100%;
+    background-color: rgba(31, 41, 55, 0.5);
+    border: 1px solid #4a5568;
+    border-radius: 0.375rem;
+    overflow: hidden;
+}
+
+.docx-viewer .docx-table td {
+    border: 1px solid #4a5568;
+    padding: 0.75rem;
+    vertical-align: top;
+    background-color: rgba(55, 65, 81, 0.3);
+    color: #ffffff;
+}
+
+.docx-viewer .docx-table tr:nth-child(even) td {
+    background-color: rgba(45, 55, 72, 0.5);
+}
+
+.docx-viewer .docx-table tr:hover td {
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* Заголовки таблиц */
+.docx-viewer .docx-table tr:first-child td {
+    font-weight: bold;
+    background-color: rgba(59, 130, 246, 0.2);
+    border-bottom: 2px solid #3b82f6;
+}
+
+/* Стили для списков */
+.docx-viewer ul, .docx-viewer ol {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+    list-style-position: outside; /* Маркеры снаружи */
+}
+
+.docx-viewer ul {
+    list-style-type: disc; /* Круглые маркеры для ul */
+}
+
+.docx-viewer ol {
+    list-style-type: decimal; /* Цифры для ol */
+}
+
+.docx-viewer .docx-list.level-0 {
+    padding-left: 1.5rem;
+    list-style-type: disc;
+}
+
+.docx-viewer .docx-list.level-1 {
+    padding-left: 2.5rem;
+    list-style-type: circle; /* Пустые кружки для 2-го уровня */
+}
+
+.docx-viewer .docx-list.level-2 {
+    padding-left: 3.5rem;
+    list-style-type: square; /* Квадратики для 3-го уровня */
+}
+
+.docx-viewer li {
+    margin-bottom: 0.25rem;
+    line-height: 1.4;
+    display: list-item; /* Важно! */
+}
+
+
+
+/* ===== СВЕТЛАЯ ТЕМА ДЛЯ ДОКУМЕНТА (ПЕРЕКЛЮЧАЕМАЯ) ===== */
+.docx-viewer.light-theme {
+    background-color: #ffffff !important;
+    color: #1f2937 !important;
+    border: 1px solid #e5e7eb !important;
+}
+
+.docx-viewer.light-theme .paragraph {
+    color: #1f2937;
+}
+
+.docx-viewer.light-theme strong {
+    color: #111827;
+}
+
+.docx-viewer.light-theme .docx-table {
+    background-color: #ffffff;
+    border: 1px solid #d1d5db;
+}
+
+.docx-viewer.light-theme .docx-table td {
+    border: 1px solid #d1d5db;
+    background-color: #ffffff;
+    color: #1f2937;
+}
+
+.docx-viewer.light-theme .docx-table tr:nth-child(even) td {
+    background-color: #f9fafb;
+}
+
+.docx-viewer.light-theme .docx-table tr:hover td {
+    background-color: #f3f4f6;
+}
+
+.docx-viewer.light-theme .docx-table tr:first-child td {
+    background-color: #e5e7eb;
+    border-bottom: 2px solid #9ca3af;
+}
+
+.docx-viewer.light-theme ul,
+.docx-viewer.light-theme ol {
+    color: #1f2937;
+}
+
+.docx-viewer.light-theme li {
+    color: #1f2937;
+}
