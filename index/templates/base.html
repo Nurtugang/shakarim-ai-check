@@ -44,14 +44,14 @@
         </div>
         <!-- Меню для десктопа -->
         <nav class="absolute right-0 hidden lg:flex space-x-6">
-            <a href="{% url 'index' %}" class="text-white hover:text-blue-300 transition">{% trans "Главная" %}</a>
-            <a href="{% url 'instructions' %}" class="text-white hover:text-blue-300 transition">{% trans "Инструкция" %}</a>
-            <a href="{% url 'contacts' %}" class="text-white hover:text-blue-300 transition">{% trans "Контакты" %}</a>
+            <a href="{% url 'index' %}" class="text-white transition {% if request.resolver_match.url_name == 'index' %}text-blue-300{% else %}hover:text-blue-300{% endif %}">{% trans "Главная" %}</a>
+            <a href="{% url 'instructions' %}" class="text-white transition {% if request.resolver_match.url_name == 'instructions' %}text-blue-300{% else %}hover:text-blue-300{% endif %}">{% trans "Инструкция" %}</a>
+            <a href="{% url 'contacts' %}" class="text-white transition {% if request.resolver_match.url_name == 'contacts' %}text-blue-300{% else %}hover:text-blue-300{% endif %}">{% trans "Контакты" %}</a>
             {% if user.is_authenticated %}
-                <a href="{% url 'dashboard' %}" class="text-white hover:text-blue-300 transition">{% trans "Дашборд" %}</a>
+                <a href="{% url 'dashboard' %}" class="text-white transition {% if request.resolver_match.url_name == 'dashboard' %}text-blue-300{% else %}hover:text-blue-300{% endif %}">{% trans "Дашборд" %}</a>
                 <a href="{% url 'logout' %}" class="text-white hover:text-blue-300 transition">{% trans "Выйти" %}</a>
             {% else %}
-                <a href="{% url 'login' %}" class="text-white hover:text-blue-300 transition">{% trans "Войти" %}</a>
+                <a href="{% url 'login' %}" class="text-white transition {% if request.resolver_match.url_name == 'login' %}text-blue-300{% else %}hover:text-blue-300{% endif %}">{% trans "Войти" %}</a>
             {% endif %}
             <div class="relative" x-data="{ open: false }">
                 <button @click="open = !open" @click.away="open = false" class="text-white bg-transparent hover:text-blue-300 focus:outline-none transition cursor-pointer flex items-center">
@@ -83,14 +83,14 @@
 
     <!-- Мобильное меню -->
     <div x-show="open" class="lg:hidden mt-4 bg-white rounded-lg p-4 space-y-3 shadow-lg text-black">
-        <a href="{% url 'index' %}" class="block hover:text-blue-600">{% trans "Главная" %}</a>
-        <a href="{% url 'instructions' %}" class="block hover:text-blue-600">{% trans "Инструкция" %}</a>
-        <a href="{% url 'contacts' %}" class="block hover:text-blue-600">{% trans "Контакты" %}</a>
+        <a href="{% url 'index' %}" class="block {% if request.resolver_match.url_name == 'index' %}text-blue-600{% else %}hover:text-blue-600{% endif %}">{% trans "Главная" %}</a>
+        <a href="{% url 'instructions' %}" class="block {% if request.resolver_match.url_name == 'instructions' %}text-blue-600{% else %}hover:text-blue-600{% endif %}">{% trans "Инструкция" %}</a>
+        <a href="{% url 'contacts' %}" class="block {% if request.resolver_match.url_name == 'contacts' %}text-blue-600{% else %}hover:text-blue-600{% endif %}">{% trans "Контакты" %}</a>
         {% if user.is_authenticated %}
-            <a href="{% url 'dashboard' %}" class="block hover:text-blue-600">{% trans "Дашборд" %}</a>
+            <a href="{% url 'dashboard' %}" class="block {% if request.resolver_match.url_name == 'dashboard' %}text-blue-600{% else %}hover:text-blue-600{% endif %}">{% trans "Дашборд" %}</a>
             <a href="{% url 'logout' %}" class="block hover:text-blue-600">{% trans "Выйти" %}</a>
         {% else %}
-            <a href="{% url 'login' %}" class="block hover:text-blue-600">{% trans "Войти" %}</a>
+            <a href="{% url 'login' %}" class="block {% if request.resolver_match.url_name == 'login' %}text-blue-600{% else %}hover:text-blue-600{% endif %}">{% trans "Войти" %}</a>
         {% endif %}
         <div class="relative" x-data="{ openLang: false }">
             <button @click="openLang = !openLang" @click.away="openLang = false"
